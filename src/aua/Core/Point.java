@@ -21,4 +21,12 @@ public class Point {
     public int getY() {
         return y;
     }
+
+    public void setX(int nextX){
+        this.x = nextX;
+    }
+
+    public void setY(int nextY){
+        this.y = nextY;
+    }
 }
