@@ -14,7 +14,6 @@ public class FileUtil {
         outputStream.close();
 
 
-        System.out.println("All contents were written to the file.");
     }
 
     public static String[] loadStringsFromFile(String path) throws FileNotFoundException,IOException {
