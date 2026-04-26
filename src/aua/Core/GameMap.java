@@ -42,23 +42,23 @@ public class GameMap {
     }
 
     public String draw(int playerX, int playerY){
-        StringBuilder builder = new StringBuilder();
+        String mapText = "";
 
         for(int y = 0; y < height; y++){
             for(int x = 0; x < width; x++){
                 if(x == playerX && y == playerY){
-                    builder.append('@');
+                    mapText += '@';
                 } else if(tiles[y][x].getType() == TerrainType.ROAD){
-                    builder.append('.');
+                    mapText += '.';
                 } else if(tiles[y][x].getType() == TerrainType.SOIL){
-                    builder.append(',');
+                    mapText += ',';
                 } else {
-                    builder.append('#');
+                    mapText += '#';
                 }
             }
-            builder.append('\n');
+            mapText += '\n';
         }
 
-        return builder.toString();
+        return mapText;
     }
 }
