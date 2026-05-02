@@ -12,10 +12,14 @@ public class GameMap {
 
         for(int y = 0; y < height; y++){
             for(int x = 0; x < width; x++){
-                if(x % 3 == 1 || y % 3 == 1){
-                    tiles[y][x] = new Tile(TerrainType.ROAD);
-                } else {
+                if(x == 0 || y == 0 || x == width - 1 || y == height - 1){
                     tiles[y][x] = new Tile(TerrainType.ROCK);
+                } else if(x % 4 == 1 || y % 4 == 1){
+                    tiles[y][x] = new Tile(TerrainType.ROAD);
+                } else if((x + y) % 8 == 0){
+                    tiles[y][x] = new Tile(TerrainType.ROCK);
+                } else {
+                    tiles[y][x] = new Tile(TerrainType.SOIL);
                 }
             }
         }
@@ -33,6 +37,10 @@ public class GameMap {
         return isInside(x, y) && tiles[y][x].isWalkable();
     }
 
+    public boolean placeObject(int x, int y, WorldObject object){
+        return isInside(x, y) && tiles[y][x].place(object);
+    }
+
     public int getWidth(){
         return width;
     }
@@ -48,6 +56,13 @@ public class GameMap {
             for(int x = 0; x < width; x++){
                 if(x == playerX && y == playerY){
                     mapText += '@';
+                } else if(tiles[y][x].getObject() instanceof Plant){
+                    Plant plant = (Plant) tiles[y][x].getObject();
+                    if(plant.isReady()){
+                        mapText += 'M';
+                    } else {
+                        mapText += 'P';
+                    }
                 } else if(tiles[y][x].getType() == TerrainType.ROAD){
                     mapText += '.';
                 } else if(tiles[y][x].getType() == TerrainType.SOIL){

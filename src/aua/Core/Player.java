@@ -30,6 +30,9 @@ public class Player {
         return inventory.isFull();
     }
 
+    public Inventory getInventory() {
+        return inventory;
+    }
     public int getMoney() {
         return money;
     }
