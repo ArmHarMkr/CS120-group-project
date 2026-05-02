@@ -1,5 +1,9 @@
 package aua.Core;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GameManager {
@@ -39,8 +43,37 @@ public class GameManager {
 
     }
 
-    public void save(){
+    public void save() throws FileNotFoundException, IOException {
+        String delimiter = "%%";
+        String separator = "-";
 
+        ArrayList<String> dataStrings = new ArrayList<String>();
+        String playerDataString = "PLAYER"+delimiter+playerPosition.getX()+separator+playerPosition.getY();
+
+        String inventoryDataString = "INVENTORY";
+        WorldObject[] inventoryWorldObjects = this.player.getInventory().getItems();
+
+        for (int i = 0; i < inventoryWorldObjects.length; i++) {
+//              Waiting for the implementation of basic get methods for plant
+                inventoryDataString = inventoryDataString+delimiter+inventoryWorldObjects[i].getName();
+            }
+
+        dataStrings.add(playerDataString);
+        dataStrings.add(inventoryDataString);
+
+        String[] mapEncoding = this.map.getMapEncoding(delimiter);
+
+        for(int i = 0; i < mapEncoding.length; i++) {
+            dataStrings.add(mapEncoding[i]);
+        }
+
+        StorageManager storageManager = new StorageManager();
+
+        //Source  https://stackoverflow.com/a/5374359/20792752
+        String[] dataStringsArray = new String[dataStrings.size()];
+        dataStringsArray = dataStrings.toArray(dataStringsArray);
+
+        storageManager.save(dataStringsArray);
     }
 
     public void update(){

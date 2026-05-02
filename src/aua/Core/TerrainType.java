@@ -3,5 +3,6 @@ package aua.Core;
 public enum TerrainType {
     ROAD,
     SOIL,
-    ROCK
+    ROCK,
+    FENCE
 }

@@ -61,4 +61,17 @@ public class GameMap {
 
         return mapText;
     }
+
+    public String[] getMapEncoding(String delimiter){
+        String[] mapEncoding = new String[this.height];
+        String separator = "-";
+        for(int y = 0; y < height; y++){
+            mapEncoding[y] = "TILE";
+            for(int x = 0; x < width; x++){
+                mapEncoding[y] = mapEncoding[y]+delimiter+this.tiles[y][x].getType()+separator+y+separator+x;
+            }
+        }
+
+        return mapEncoding;
+    }
 }
