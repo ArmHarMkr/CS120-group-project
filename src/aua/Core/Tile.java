@@ -40,11 +40,7 @@ public class Tile {
         return temp;
     }
 
-    public void tick(){
-        if(object instanceof Plant){
-            ((Plant) object).grow();
-        }
-    }
+
 
     public WorldObject getObject(){
         return object;
