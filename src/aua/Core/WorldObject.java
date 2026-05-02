@@ -10,4 +10,6 @@ public abstract class WorldObject {
     public String getName(){
         return name;
     }
+
+    public abstract WorldObject copy();
 }

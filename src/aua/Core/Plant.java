@@ -12,6 +12,20 @@ public class Plant extends WorldObject {
         this.harvestProduct = product;
     }
 
+
+    public Plant(Plant other){
+        super(other.name);
+        this.growthPeriod = other.growthPeriod;
+        this.currentGrowth = other.currentGrowth;
+        this.harvestProduct = new Product(other.harvestProduct); // deep copy!
+    }
+
+
+    public WorldObject copy(){
+        return new Plant(this);
+    }
+
+
     public void grow(){
         currentGrowth++;
     }
@@ -26,4 +40,6 @@ public class Plant extends WorldObject {
         currentGrowth = 0;
         return harvestProduct;
     }
+
+
 }
