@@ -61,4 +61,14 @@ public class GameMap {
 
         return mapText;
     }
+
+    public void tickAll(){
+        for(int y = 0; y < height; y++){
+            for(int x = 0; x < width; x++){
+                if(tiles[y][x].getType() == TerrainType.SOIL){
+                    tiles[y][x].tick();
+                }
+            }
+        }
+    }
 }
