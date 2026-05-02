@@ -41,6 +41,7 @@ public class GameMap {
         return isInside(x, y) && tiles[y][x].place(object);
     }
 
+
     public int getWidth(){
         return width;
     }
