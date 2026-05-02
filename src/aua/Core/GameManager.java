@@ -82,16 +82,30 @@ public class GameManager {
         movePlayer(nextX, nextY);
     }
 
+    public void tickAll(){
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                if(this.map.getTile(i,j).getObject() instanceof Plant){
+                    Plant plant = (Plant) this.map.getTile(i,j).getObject();
+                    if(!plant.isReady()){
+                        plant.grow();
+                    }
+                }
+            }
+        }
+    }
+
     private void movePlayer(int nextX, int nextY){
         if(map.isWalkable(nextX, nextY)){
             playerPosition.setX(nextX);
             playerPosition.setY(nextY);
-            map.tickAll();
+            this.tickAll();
             message = "Moved to (" + nextX + ", " + nextY + ").";
         } else {
             message = "You cannot walk there.";
         }
     }
+
 
     private Point findStartingPosition(){
         for(int y = 0; y < map.getHeight(); y++){
