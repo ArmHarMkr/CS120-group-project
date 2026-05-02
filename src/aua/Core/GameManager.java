@@ -103,99 +103,30 @@ public class GameManager {
         movePlayer(nextX, nextY);
     }
 
-    private void selectInventoryItem(char input){
-        int index = Character.getNumericValue(input) - 1;
-
-        if(player.selectItem(index)){
-            WorldObject selectedItem = player.getSelectedItem();
-            message = "Selected " + selectedItem.getName() + ".";
-        } else {
-            message = "No item in that inventory slot.";
-        }
-    }
-
-    private void plant(String command){
-        WorldObject selectedItem = player.getSelectedItem();
-
-        if(!(selectedItem instanceof Plant)){
-            message = "Select a plant from your inventory first.";
-            return;
-        }
-
-        char direction = getDirection(command);
-        if(direction == ' '){
-            message = "Choose where to plant after pressing P: Q, W, E, A, S, D, Z, or C.";
-            return;
-        }
-
-        Point target = getTargetPoint(direction);
-        if(target == null){
-            message = "Choose where to plant after pressing P: Q, W, E, A, S, D, Z, or C.";
-            return;
-        }
-
-        if(map.placeObject(target.getX(), target.getY(), selectedItem)){
-            WorldObject plant = player.takeSelectedItem();
-            map.tickAll();
-            message = "Planted " + plant.getName() + ".";
-        } else {
-            message = "You can only plant on empty soil next to you.";
-        }
-    }
-
-    private char getDirection(String command){
-        for(int i = 1; i < command.length(); i++){
-            char letter = Character.toLowerCase(command.charAt(i));
-            if(letter == 'q' || letter == 'w' || letter == 'e' || letter == 'a' ||
-                    letter == 's' || letter == 'd' || letter == 'z' || letter == 'c'){
-                return letter;
+    public void tickAll(){
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                if(this.map.getTile(i,j).getObject() instanceof Plant){
+                    Plant plant = (Plant) this.map.getTile(i,j).getObject();
+                    if(!plant.isReady()){
+                        plant.grow();
+                    }
+                }
             }
         }
-
-        return ' ';
-    }
-
-    private Point getTargetPoint(char direction){
-        int targetX = playerPosition.getX();
-        int targetY = playerPosition.getY();
-
-        if(direction == 'q'){
-            targetX--;
-            targetY--;
-        } else if(direction == 'w'){
-            targetY--;
-        } else if(direction == 'e'){
-            targetX++;
-            targetY--;
-        } else if(direction == 's'){
-            targetY++;
-        } else if(direction == 'a'){
-            targetX--;
-        } else if(direction == 'd'){
-            targetX++;
-        } else if(direction == 'z'){
-            targetX--;
-            targetY++;
-        } else if(direction == 'c'){
-            targetX++;
-            targetY++;
-        } else {
-            return null;
-        }
-
-        return new Point(targetX, targetY);
     }
 
     private void movePlayer(int nextX, int nextY){
         if(map.isWalkable(nextX, nextY)){
             playerPosition.setX(nextX);
             playerPosition.setY(nextY);
-            map.tickAll();
+            this.tickAll();
             message = "Moved to (" + nextX + ", " + nextY + ").";
         } else {
             message = "You cannot walk there.";
         }
     }
+
 
     private Point findStartingPosition(){
         for(int y = 0; y < map.getHeight(); y++){

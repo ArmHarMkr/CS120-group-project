@@ -62,4 +62,8 @@ public class Player {
             money += amount;
         }
     }
+
+    public Product harvest(Tile tile){
+        return null;
+    }
 }
