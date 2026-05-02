@@ -1,6 +1,6 @@
 package aua.Core;
 
-public class Product extends Item {
+public class Product extends WorldObject {
 
     private int sellPrice;
     private int buyPrice;
