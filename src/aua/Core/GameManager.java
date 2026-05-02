@@ -86,6 +86,7 @@ public class GameManager {
         if(map.isWalkable(nextX, nextY)){
             playerPosition.setX(nextX);
             playerPosition.setY(nextY);
+            map.tickAll();
             message = "Moved to (" + nextX + ", " + nextY + ").";
         } else {
             message = "You cannot walk there.";
