@@ -84,7 +84,7 @@ public class Inventory {
     public WorldObject[] getItems() {
         WorldObject[] copy = new WorldObject[size];
         for (int i = 0; i < size; i++) {
-            copy[i] = items[i];
+            copy[i] = items[i].copy();
         }
         return copy;
     }

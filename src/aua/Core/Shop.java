@@ -34,20 +34,20 @@ public class Shop {
         if (!contains(product)) {
             return false;
         }
-        if (player.getInventory().isFull()) {
+        if (player.isInventoryFull()) {
             return false;
         }
         if (!player.spendMoney(product.getBuyPrice())) {
             return false;
         }
-        return player.getInventory().addItem(product);
+        return player.addToInventory(product);
     }
 
     public boolean sell(Player player, Product product) {
         if (player == null || product == null) {
             return false;
         }
-        if (!player.getInventory().removeItem(product)) {
+        if (!player.removeFromInventory(product)) {
             return false;
         }
         player.addMoney(product.getSellPrice());

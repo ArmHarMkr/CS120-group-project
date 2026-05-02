@@ -18,8 +18,16 @@ public class Player {
         this.inventory = new Inventory();
     }
 
-    public Inventory getInventory() {
-        return inventory;
+    public boolean addToInventory(WorldObject item) {
+        return inventory.addItem(item);
+    }
+
+    public boolean removeFromInventory(WorldObject item) {
+        return inventory.removeItem(item);
+    }
+
+    public boolean isInventoryFull() {
+        return inventory.isFull();
     }
 
     public int getMoney() {
