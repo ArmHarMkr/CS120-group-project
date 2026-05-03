@@ -136,7 +136,7 @@ public class GameManager {
 
         if(map.placeObject(target.getX(), target.getY(), selectedItem)){
             WorldObject plant = player.takeSelectedItem();
-            map.tickAll();
+            this.tickAll();
             message = "Planted " + plant.getName() + ".";
         } else {
             message = "You can only plant on empty soil next to you.";
@@ -190,7 +190,7 @@ public class GameManager {
         if(map.isWalkable(nextX, nextY)){
             playerPosition.setX(nextX);
             playerPosition.setY(nextY);
-            map.tickAll();
+            this.tickAll();
             message = "Moved to (" + nextX + ", " + nextY + ").";
         } else {
             message = "You cannot walk there.";
