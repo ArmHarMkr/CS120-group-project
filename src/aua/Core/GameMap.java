@@ -10,16 +10,16 @@ public class GameMap {
         this.height = height;
         tiles = new Tile[height][width];
 
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++){
-                if(x == 0 || y == 0 || x == width - 1 || y == height - 1){
-                    tiles[y][x] = new Tile(TerrainType.ROCK);
-                } else if(x % 4 == 1 || y % 4 == 1){
-                    tiles[y][x] = new Tile(TerrainType.ROAD);
-                } else if((x + y) % 8 == 0){
-                    tiles[y][x] = new Tile(TerrainType.ROCK);
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                if(j == 0 || i == 0 || j == width - 1 || i == height - 1){
+                    tiles[i][j] = new Tile(TerrainType.ROCK);
+                } else if(j % 4 == 1 || i % 4 == 1){
+                    tiles[i][j] = new Tile(TerrainType.ROAD);
+                } else if((j + i) % 8 == 0){
+                    tiles[i][j] = new Tile(TerrainType.ROCK);
                 } else {
-                    tiles[y][x] = new Tile(TerrainType.SOIL);
+                    tiles[i][j] = new Tile(TerrainType.SOIL);
                 }
             }
         }
@@ -53,20 +53,20 @@ public class GameMap {
     public String draw(int playerX, int playerY){
         String mapText = "";
 
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++){
-                if(x == playerX && y == playerY){
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                if(j == playerX && i == playerY){
                     mapText += '@';
-                } else if(tiles[y][x].getObject() instanceof Plant){
-                    Plant plant = (Plant) tiles[y][x].getObject();
+                } else if(tiles[i][j].getObject() instanceof Plant){
+                    Plant plant = (Plant) tiles[i][j].getObject();
                     if(plant.isReady()){
                         mapText += 'M';
                     } else {
                         mapText += 'P';
                     }
-                } else if(tiles[y][x].getType() == TerrainType.ROAD){
+                } else if(tiles[i][j].getType() == TerrainType.ROAD){
                     mapText += '.';
-                } else if(tiles[y][x].getType() == TerrainType.SOIL){
+                } else if(tiles[i][j].getType() == TerrainType.SOIL){
                     mapText += ',';
                 } else {
                     mapText += '#';
@@ -76,6 +76,16 @@ public class GameMap {
         }
 
         return mapText;
+    }
+
+    public void tickAll(){
+        for(int i = 0; i < height; i++){
+            for(int j = 0; j < width; j++){
+                if(tiles[i][j].getType() == TerrainType.SOIL){
+                    tiles[i][j].tick();
+                }
+            }
+        }
     }
 
 }

@@ -210,12 +210,9 @@ public class GameManager {
     }
 
     private void addStartingPlants(){
-        Product carrot = new Product("Carrot", 4, 2);
-        Product tomato = new Product("Tomato", 6, 3);
-
-        player.addToInventory(new Plant("Carrot Seed", 4, carrot));
-        player.addToInventory(new Plant("Carrot Seed", 4, carrot));
-        player.addToInventory(new Plant("Tomato Seed", 6, tomato));
+        player.addToInventory(new Plant("Carrot Seed", 4));
+        player.addToInventory(new Plant("Carrot Seed", 4));
+        player.addToInventory(new Plant("Tomato Seed", 6));
     }
 
     private String drawInventory(){
