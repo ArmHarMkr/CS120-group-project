@@ -1,7 +1,5 @@
 package aua.Core;
 
-import java.util.Scanner;
-
 public class GameManager {
     private static final int width = 21;
     private static final int height = 21;
@@ -24,30 +22,6 @@ public class GameManager {
         this.message = "Use roads to move around the map.";
     }
 
-    public void start(){
-        Scanner scanner = new Scanner(System.in);
-
-        while(isRunning){
-            draw();
-            System.out.print("Command: ");
-            if(!scanner.hasNextLine()){
-                isRunning = false;
-                return;
-            }
-            String command = scanner.nextLine().trim();
-            if(command.equalsIgnoreCase("p")){
-                System.out.print("Plant direction (Q/W/E/A/S/D/Z/C): ");
-                if(!scanner.hasNextLine()){
-                    isRunning = false;
-                    return;
-                }
-                command += scanner.nextLine().trim();
-            }
-            update(command);
-        }
-
-    }
-
     public void load(){
 
     }
@@ -56,38 +30,17 @@ public class GameManager {
 
     }
 
-    public void update(){
-
+    public void quit(){
+        isRunning = false;
+        message = "Thanks for playing.";
     }
 
-    public void draw(){
-        System.out.println(map.draw(playerPosition.getX(), playerPosition.getY()));
-        System.out.println("@ player, . road, , soil, # rock, P plant, M mature plant");
-        System.out.println("W/A/S/D move | P plant around player | 1-9 select item | Q quit");
-        System.out.println(drawInventory());
-        System.out.println(message);
-    }
-
-    private void update(String command){
-        if(command == null || command.isEmpty()){
-            return;
-        }
-
-        char input = Character.toLowerCase(command.charAt(0));
+    public void handleMovement(char input){
+        input = Character.toLowerCase(input);
         int nextX = playerPosition.getX();
         int nextY = playerPosition.getY();
 
-        if(Character.isDigit(input)){
-            selectInventoryItem(input);
-            return;
-        } else if(input == 'q'){
-            isRunning = false;
-            message = "Thanks for playing.";
-            return;
-        } else if(input == 'p'){
-            plant(command);
-            return;
-        } else if(input == 'w'){
+        if(input == 'w'){
             nextY--;
         } else if(input == 's'){
             nextY++;
@@ -103,9 +56,7 @@ public class GameManager {
         movePlayer(nextX, nextY);
     }
 
-    private void selectInventoryItem(char input){
-        int index = Character.getNumericValue(input) - 1;
-
+    public void selectInventoryItem(int index){
         if(player.selectItem(index)){
             WorldObject selectedItem = player.getSelectedItem();
             message = "Selected " + selectedItem.getName() + ".";
@@ -114,7 +65,7 @@ public class GameManager {
         }
     }
 
-    private void plant(String command){
+    public void plant(char direction){
         WorldObject selectedItem = player.getSelectedItem();
 
         if(!(selectedItem instanceof Plant)){
@@ -122,7 +73,7 @@ public class GameManager {
             return;
         }
 
-        char direction = getDirection(command);
+        direction = Character.toLowerCase(direction);
         if(direction == ' '){
             message = "Choose where to plant after pressing P: Q, W, E, A, S, D, Z, or C.";
             return;
@@ -141,18 +92,6 @@ public class GameManager {
         } else {
             message = "You can only plant on empty soil next to you.";
         }
-    }
-
-    private char getDirection(String command){
-        for(int i = 1; i < command.length(); i++){
-            char letter = Character.toLowerCase(command.charAt(i));
-            if(letter == 'q' || letter == 'w' || letter == 'e' || letter == 'a' ||
-                    letter == 's' || letter == 'd' || letter == 'z' || letter == 'c'){
-                return letter;
-            }
-        }
-
-        return ' ';
     }
 
     private Point getTargetPoint(char direction){
@@ -229,7 +168,19 @@ public class GameManager {
         player.addToInventory(new Plant("Tomato Seed", 6));
     }
 
-    private String drawInventory(){
+    public boolean isRunning(){
+        return isRunning;
+    }
+
+    public String drawMap(){
+        return map.draw(playerPosition.getX(), playerPosition.getY());
+    }
+
+    public String getMessage(){
+        return message;
+    }
+
+    public String drawInventory(){
         WorldObject[] items = player.getInventoryItems();
         String inventoryText = "Inventory: ";
 
