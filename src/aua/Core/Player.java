@@ -34,6 +34,14 @@ public class Player {
         return money;
     }
 
+    public WorldObject[] getInventoryItems() {
+        return inventory.getItems();
+    }
+
+    public int getSelectedInventoryIndex() {
+        return inventory.getSelectedIndex();
+    }
+
     public boolean selectItem(int index) {
         return inventory.selectItem(index);
     }

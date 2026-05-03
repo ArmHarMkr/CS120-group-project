@@ -18,6 +18,7 @@ public class GameManager {
     public GameManager(){
         this.player = new Player();
         this.map = new GameMap(width, height);
+        addStartingPlants();
         this.playerPosition = findStartingPosition();
         this.isRunning = true;
         this.message = "Use roads to move around the map.";
@@ -28,8 +29,20 @@ public class GameManager {
 
         while(isRunning){
             draw();
-            System.out.print("Move with W/A/S/D, or Q to quit: ");
-            String command = scanner.nextLine();
+            System.out.print("Command: ");
+            if(!scanner.hasNextLine()){
+                isRunning = false;
+                return;
+            }
+            String command = scanner.nextLine().trim();
+            if(command.equalsIgnoreCase("p")){
+                System.out.print("Plant direction (Q/W/E/A/S/D/Z/C): ");
+                if(!scanner.hasNextLine()){
+                    isRunning = false;
+                    return;
+                }
+                command += scanner.nextLine().trim();
+            }
             update(command);
         }
 
@@ -49,7 +62,9 @@ public class GameManager {
 
     public void draw(){
         System.out.println(map.draw(playerPosition.getX(), playerPosition.getY()));
-        System.out.println("@ player, . road, # rock");
+        System.out.println("@ player, . road, , soil, # rock, P plant, M mature plant");
+        System.out.println("W/A/S/D move | P plant around player | 1-9 select item | Q quit");
+        System.out.println(drawInventory());
         System.out.println(message);
     }
 
@@ -62,9 +77,15 @@ public class GameManager {
         int nextX = playerPosition.getX();
         int nextY = playerPosition.getY();
 
-        if(input == 'q'){
+        if(Character.isDigit(input)){
+            selectInventoryItem(input);
+            return;
+        } else if(input == 'q'){
             isRunning = false;
             message = "Thanks for playing.";
+            return;
+        } else if(input == 'p'){
+            plant(command);
             return;
         } else if(input == 'w'){
             nextY--;
@@ -82,11 +103,94 @@ public class GameManager {
         movePlayer(nextX, nextY);
     }
 
+    private void selectInventoryItem(char input){
+        int index = Character.getNumericValue(input) - 1;
+
+        if(player.selectItem(index)){
+            WorldObject selectedItem = player.getSelectedItem();
+            message = "Selected " + selectedItem.getName() + ".";
+        } else {
+            message = "No item in that inventory slot.";
+        }
+    }
+
+    private void plant(String command){
+        WorldObject selectedItem = player.getSelectedItem();
+
+        if(!(selectedItem instanceof Plant)){
+            message = "Select a plant from your inventory first.";
+            return;
+        }
+
+        char direction = getDirection(command);
+        if(direction == ' '){
+            message = "Choose where to plant after pressing P: Q, W, E, A, S, D, Z, or C.";
+            return;
+        }
+
+        Point target = getTargetPoint(direction);
+        if(target == null){
+            message = "Choose where to plant after pressing P: Q, W, E, A, S, D, Z, or C.";
+            return;
+        }
+
+        if(map.placeObject(target.getX(), target.getY(), selectedItem)){
+            WorldObject plant = player.takeSelectedItem();
+            this.tickAll();
+            message = "Planted " + plant.getName() + ".";
+        } else {
+            message = "You can only plant on empty soil next to you.";
+        }
+    }
+
+    private char getDirection(String command){
+        for(int i = 1; i < command.length(); i++){
+            char letter = Character.toLowerCase(command.charAt(i));
+            if(letter == 'q' || letter == 'w' || letter == 'e' || letter == 'a' ||
+                    letter == 's' || letter == 'd' || letter == 'z' || letter == 'c'){
+                return letter;
+            }
+        }
+
+        return ' ';
+    }
+
+    private Point getTargetPoint(char direction){
+        int targetX = playerPosition.getX();
+        int targetY = playerPosition.getY();
+
+        if(direction == 'q'){
+            targetX--;
+            targetY--;
+        } else if(direction == 'w'){
+            targetY--;
+        } else if(direction == 'e'){
+            targetX++;
+            targetY--;
+        } else if(direction == 'a'){
+            targetX--;
+        } else if(direction == 's'){
+            targetY++;
+        } else if(direction == 'd'){
+            targetX++;
+        } else if(direction == 'z'){
+            targetX--;
+            targetY++;
+        } else if(direction == 'c'){
+            targetX++;
+            targetY++;
+        } else {
+            return null;
+        }
+
+        return new Point(targetX, targetY);
+    }
+
     public void tickAll(){
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
-                if(this.map.getTile(i,j).getObject() instanceof Plant){
-                    Plant plant = (Plant) this.map.getTile(i,j).getObject();
+                if(this.map.getTile(j, i).getObject() instanceof Plant){
+                    Plant plant = (Plant) this.map.getTile(j, i).getObject();
                     if(!plant.isReady()){
                         plant.grow();
                     }
@@ -108,14 +212,39 @@ public class GameManager {
 
 
     private Point findStartingPosition(){
-        for(int y = 0; y < map.getHeight(); y++){
-            for(int x = 0; x < map.getWidth(); x++){
-                if(map.isWalkable(x, y)){
-                    return new Point(x, y);
+        for(int i = 0; i < map.getHeight(); i++){
+            for(int j = 0; j < map.getWidth(); j++){
+                if(map.isWalkable(j, i)){
+                    return new Point(j, i);
                 }
             }
         }
 
         return new Point();
+    }
+
+    private void addStartingPlants(){
+        player.addToInventory(new Plant("Carrot Seed", 4));
+        player.addToInventory(new Plant("Carrot Seed", 4));
+        player.addToInventory(new Plant("Tomato Seed", 6));
+    }
+
+    private String drawInventory(){
+        WorldObject[] items = player.getInventoryItems();
+        String inventoryText = "Inventory: ";
+
+        if(items.length == 0){
+            return inventoryText + "empty";
+        }
+
+        for(int i = 0; i < items.length; i++){
+            if(i == player.getSelectedInventoryIndex()){
+                inventoryText += "[" + (i + 1) + ":" + items[i].getName() + "] ";
+            } else {
+                inventoryText += (i + 1) + ":" + items[i].getName() + " ";
+            }
+        }
+
+        return inventoryText;
     }
 }
