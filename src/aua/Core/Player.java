@@ -18,11 +18,11 @@ public class Player {
         this.inventory = new Inventory();
     }
 
-    public boolean addToInventory(WorldObject item) {
+    public boolean addToInventory(Item item) {
         return inventory.addItem(item);
     }
 
-    public boolean removeFromInventory(WorldObject item) {
+    public boolean removeFromInventory(Item item) {
         return inventory.removeItem(item);
     }
 
@@ -38,11 +38,11 @@ public class Player {
         return inventory.selectItem(index);
     }
 
-    public WorldObject getSelectedItem() {
+    public Item getSelectedItem() {
         return inventory.getSelectedItem();
     }
 
-    public WorldObject takeSelectedItem() {
+    public Item takeSelectedItem() {
         return inventory.removeSelectedItem();
     }
 
