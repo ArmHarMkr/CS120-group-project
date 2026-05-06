@@ -3,7 +3,7 @@ package aua.Core;
 public class Inventory {
 
     private static final int DEFAULT_CAPACITY = 20;
-    private WorldObject[] items;
+    private Item[] items;
     private int size;
     private int selectedIndex;
 
@@ -13,12 +13,12 @@ public class Inventory {
 
     public Inventory(int capacity) {
         if (capacity <= 0) {capacity = DEFAULT_CAPACITY;}
-        this.items = new WorldObject[capacity];
+        this.items = new Item[capacity];
         this.size = 0;
         this.selectedIndex = -1;
     }
 
-    public boolean addItem(WorldObject item) {
+    public boolean addItem(Item item) {
         if (item == null || isFull()) {return false;}
         items[size] = item;
         if (selectedIndex == -1) {selectedIndex = 0;}
@@ -34,18 +34,18 @@ public class Inventory {
         return true;
     }
 
-    public WorldObject getSelectedItem() {
+    public Item getSelectedItem() {
         if (selectedIndex == -1) {
             return null;
         }
         return items[selectedIndex];
     }
 
-    public WorldObject removeSelectedItem() {
+    public Item removeSelectedItem() {
         if (selectedIndex == -1) {
             return null;
         }
-        WorldObject removedItem = items[selectedIndex];
+        Item removedItem = items[selectedIndex];
         for (int i = selectedIndex; i < size - 1; i++) {
             items[i] = items[i + 1];
         }
@@ -59,7 +59,7 @@ public class Inventory {
         return removedItem;
     }
 
-    public boolean removeItem(WorldObject item) {
+    public boolean removeItem(Item item) {
         if (item == null) {
             return false;
         }
@@ -81,7 +81,7 @@ public class Inventory {
         return false;
     }
 
-    public WorldObject[] getItems() {
+    public Item[] getItems() {
         WorldObject[] copy = new WorldObject[size];
         for (int i = 0; i < size; i++) {
             copy[i] = items[i].copy();

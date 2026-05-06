@@ -1,13 +1,8 @@
 package aua.Core;
 
-public abstract class Item{
-    private String name;
+import aua.Core.WorldObject;
 
-    public Item(String name){
-        this.name = name;
-    }
-
-    public String getName(){
-        return name;
-    }
+public interface Item {
+    String getName();
+    WorldObject copy();
 }
