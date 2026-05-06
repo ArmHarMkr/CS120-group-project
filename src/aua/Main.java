@@ -1,7 +1,7 @@
 package aua;
 
-import aua.CLI.ConsoleInterface;
-import aua.Core.GameManager;
+import aua.cli.ConsoleInterface;
+import aua.core.GameManager;
 
 public class Main {
     public static void main(String[] args) {
