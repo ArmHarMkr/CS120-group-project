@@ -1,6 +1,4 @@
-package aua.Core;
-
-import aua.Core.WorldObject;
+package aua.core;
 
 public interface Item {
     String getName();

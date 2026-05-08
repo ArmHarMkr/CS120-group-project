@@ -1,4 +1,4 @@
-package aua.Core;
+package aua.core;
 
 public class Plant extends WorldObject {
 

@@ -1,4 +1,4 @@
-package aua.Core;
+package aua.core;
 
 
 public abstract class WorldObject implements Item {

@@ -1,4 +1,9 @@
-package aua.Core;
+package aua.core;
+
+import aua.core.exceptions.GameActionException;
+import aua.core.exceptions.InvalidDirectionException;
+import aua.core.exceptions.InvalidGameActionException;
+import aua.core.exceptions.InvalidInventorySelectionException;
 
 public class GameManager {
     private static final int width = 21;
@@ -35,7 +40,7 @@ public class GameManager {
         message = "Thanks for playing.";
     }
 
-    public void handleMovement(char input){
+    public void handleMovement(char input) throws GameActionException {
         input = Character.toLowerCase(input);
         int nextX = playerPosition.getX();
         int nextY = playerPosition.getY();
@@ -49,48 +54,44 @@ public class GameManager {
         } else if(input == 'd'){
             nextX++;
         } else {
-            message = "Unknown command.";
-            return;
+            throw new InvalidDirectionException("Unknown command.");
         }
 
         movePlayer(nextX, nextY);
     }
 
-    public void selectInventoryItem(int index){
+    public void selectInventoryItem(int index) throws GameActionException {
         if(player.selectItem(index)){
-            WorldObject selectedItem = player.getSelectedItem();
+            Item selectedItem = player.getSelectedItem();
             message = "Selected " + selectedItem.getName() + ".";
         } else {
-            message = "No item in that inventory slot.";
+            throw new InvalidInventorySelectionException("No item in that inventory slot.");
         }
     }
 
-    public void plant(char direction){
-        WorldObject selectedItem = player.getSelectedItem();
+    public void plant(char direction) throws GameActionException {
+        Item selectedItem = player.getSelectedItem();
 
         if(!(selectedItem instanceof Plant)){
-            message = "Select a plant from your inventory first.";
-            return;
+            throw new InvalidGameActionException("Select a plant from your inventory first.");
         }
 
         direction = Character.toLowerCase(direction);
         if(direction == ' '){
-            message = "Choose where to plant after pressing P: Q, W, E, A, S, D, Z, or C.";
-            return;
+            throw new InvalidDirectionException("Choose where to plant after pressing P: Q, W, E, A, S, D, Z, or C.");
         }
 
         Point target = getTargetPoint(direction);
         if(target == null){
-            message = "Choose where to plant after pressing P: Q, W, E, A, S, D, Z, or C.";
-            return;
+            throw new InvalidDirectionException("Choose where to plant after pressing P: Q, W, E, A, S, D, Z, or C.");
         }
 
-        if(map.placeObject(target.getX(), target.getY(), selectedItem)){
-            WorldObject plant = player.takeSelectedItem();
+        if(map.placeObject(target.getX(), target.getY(), (WorldObject) selectedItem)){
+            Item plant = player.takeSelectedItem();
             this.tickAll();
             message = "Planted " + plant.getName() + ".";
         } else {
-            message = "You can only plant on empty soil next to you.";
+            throw new InvalidGameActionException("You can only plant on empty soil next to you.");
         }
     }
 
@@ -138,14 +139,14 @@ public class GameManager {
         }
     }
 
-    private void movePlayer(int nextX, int nextY){
+    private void movePlayer(int nextX, int nextY) throws GameActionException {
         if(map.isWalkable(nextX, nextY)){
             playerPosition.setX(nextX);
             playerPosition.setY(nextY);
             this.tickAll();
             message = "Moved to (" + nextX + ", " + nextY + ").";
         } else {
-            message = "You cannot walk there.";
+            throw new InvalidGameActionException("You cannot walk there.");
         }
     }
 
@@ -180,8 +181,12 @@ public class GameManager {
         return message;
     }
 
+    public void setMessage(String message){
+        this.message = message;
+    }
+
     public String drawInventory(){
-        WorldObject[] items = player.getInventoryItems();
+        Item[] items = player.getInventoryItems();
         String inventoryText = "Inventory: ";
 
         if(items.length == 0){

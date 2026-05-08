@@ -1,4 +1,4 @@
-package aua.Core;
+package aua.core;
 
 public class Player {
 
@@ -34,7 +34,7 @@ public class Player {
         return money;
     }
 
-    public WorldObject[] getInventoryItems() {
+    public Item[] getInventoryItems() {
         return inventory.getItems();
     }
 

@@ -1,4 +1,4 @@
-package aua.Core;
+package aua.core;
 
 public class GameMap {
     private Tile[][] tiles;
