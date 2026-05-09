@@ -35,6 +35,9 @@ public class Plant extends WorldObject {
         return new Plant(this);
     }
 
+    public Product getProductParameters() throws CloneNotSupportedException {
+        return harvestProduct.clone();
+    }
 
     public void grow(){
         currentGrowth++;
