@@ -1,4 +1,4 @@
-package aua.Core;
+package aua.core;
 
 public class GameManager {
     private static final int width = 21;
@@ -58,7 +58,7 @@ public class GameManager {
 
     public void selectInventoryItem(int index){
         if(player.selectItem(index)){
-            WorldObject selectedItem = player.getSelectedItem();
+            Item selectedItem = player.getSelectedItem();
             message = "Selected " + selectedItem.getName() + ".";
         } else {
             message = "No item in that inventory slot.";
@@ -66,7 +66,7 @@ public class GameManager {
     }
 
     public void plant(char direction){
-        WorldObject selectedItem = player.getSelectedItem();
+        Item selectedItem = player.getSelectedItem();
 
         if(!(selectedItem instanceof Plant)){
             message = "Select a plant from your inventory first.";
@@ -85,13 +85,38 @@ public class GameManager {
             return;
         }
 
-        if(map.placeObject(target.getX(), target.getY(), selectedItem)){
-            WorldObject plant = player.takeSelectedItem();
+        if(map.placeObject(target.getX(), target.getY(), (WorldObject) selectedItem)){
+            Item plant = player.takeSelectedItem();
             this.tickAll();
             message = "Planted " + plant.getName() + ".";
         } else {
             message = "You can only plant on empty soil next to you.";
         }
+    }
+
+    public void collect(char direction){
+        direction = Character.toLowerCase(direction);
+
+        Point target = getTargetPoint(direction);
+        if(target == null){
+            message = "Choose where to collect after pressing H: Q, W, E, A, S, D, Z, or C.";
+            return;
+        }
+
+        if(player.isInventoryFull()){
+            message = "Inventory is full.";
+            return;
+        }
+
+        Product product = map.collectPlant(target.getX(), target.getY());
+        if(product == null){
+            message = "There is no mature plant to collect there.";
+            return;
+        }
+
+        player.addToInventory(product);
+        this.tickAll();
+        message = "Collected " + product.getName() + ".";
     }
 
     private Point getTargetPoint(char direction){
@@ -163,9 +188,9 @@ public class GameManager {
     }
 
     private void addStartingPlants(){
-        player.addToInventory(new Plant("Carrot Seed", 4));
-        player.addToInventory(new Plant("Carrot Seed", 4));
-        player.addToInventory(new Plant("Tomato Seed", 6));
+        player.addToInventory(new Plant("Carrot Seed", 4, new Product("Carrot", 0, 2)));
+        player.addToInventory(new Plant("Carrot Seed", 4, new Product("Carrot", 0, 2)));
+        player.addToInventory(new Plant("Tomato Seed", 6, new Product("Tomato", 0, 3)));
     }
 
     public boolean isRunning(){
@@ -181,7 +206,7 @@ public class GameManager {
     }
 
     public String drawInventory(){
-        WorldObject[] items = player.getInventoryItems();
+        Item[] items = player.getInventoryItems();
         String inventoryText = "Inventory: ";
 
         if(items.length == 0){

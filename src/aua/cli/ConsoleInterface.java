@@ -1,6 +1,6 @@
-package aua.CLI;
+package aua.cli;
 
-import aua.Core.GameManager;
+import aua.core.GameManager;
 
 import java.util.Scanner;
 
@@ -30,7 +30,7 @@ public class ConsoleInterface {
     private void draw(){
         System.out.println(gameManager.drawMap());
         System.out.println("@ player, . road, , soil, # rock, P plant, M mature plant");
-        System.out.println("W/A/S/D move | P plant around player | 1-9 select item | Q quit");
+        System.out.println("W/A/S/D move | P plant | H collect | 1-9 select item | Q quit");
         System.out.println(gameManager.drawInventory());
         System.out.println(gameManager.getMessage());
     }
@@ -48,6 +48,8 @@ public class ConsoleInterface {
             gameManager.quit();
         } else if(input == 'p'){
             handlePlanting();
+        } else if(input == 'h'){
+            handleCollecting();
         } else {
             gameManager.handleMovement(input);
         }
@@ -66,6 +68,22 @@ public class ConsoleInterface {
             gameManager.plant(' ');
         } else {
             gameManager.plant(direction.charAt(0));
+        }
+    }
+
+    private void handleCollecting(){
+        System.out.print("Collect direction (Q/W/E/A/S/D/Z/C): ");
+
+        if(!scanner.hasNextLine()){
+            gameManager.quit();
+            return;
+        }
+
+        String direction = scanner.nextLine().trim();
+        if(direction.isEmpty()){
+            gameManager.collect(' ');
+        } else {
+            gameManager.collect(direction.charAt(0));
         }
     }
 }

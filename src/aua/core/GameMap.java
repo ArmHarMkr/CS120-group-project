@@ -1,4 +1,4 @@
-package aua.Core;
+package aua.core;
 
 public class GameMap {
     private Tile[][] tiles;
@@ -39,6 +39,26 @@ public class GameMap {
 
     public boolean placeObject(int x, int y, WorldObject object){
         return isInside(x, y) && tiles[y][x].place(object);
+    }
+
+    public Product collectPlant(int x, int y){
+        if(!isInside(x, y)){
+            return null;
+        }
+
+        WorldObject object = tiles[y][x].getObject();
+        if(!(object instanceof Plant)){
+            return null;
+        }
+
+        Plant plant = (Plant) object;
+        Product product = plant.collect();
+        if(product == null){
+            return null;
+        }
+
+        tiles[y][x].remove();
+        return product;
     }
 
     public int getWidth(){
