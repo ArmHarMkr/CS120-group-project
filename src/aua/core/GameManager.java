@@ -5,6 +5,10 @@ import aua.core.exceptions.InvalidDirectionException;
 import aua.core.exceptions.InvalidGameActionException;
 import aua.core.exceptions.InvalidInventorySelectionException;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class GameManager {
     private static final int width = 21;
     private static final int height = 21;
@@ -31,8 +35,43 @@ public class GameManager {
 
     }
 
-    public void save(){
+    public void save() throws FileNotFoundException, IOException, CloneNotSupportedException {
+        String delimiter = "%%";
+        String separator = "-";
 
+        ArrayList<String> dataStrings = new ArrayList<String>();
+        String playerDataString = "PLAYER"+delimiter+playerPosition.getX()+separator+playerPosition.getY()+delimiter+player.getMoney();
+
+        String inventoryDataString = "INVENTORY";
+        Item[] inventoryItems = this.player.getInventoryItems();
+
+        for (int i = 0; i < inventoryItems.length; i++) {
+            if(inventoryItems[i] instanceof WorldObject){
+                Plant plant = (Plant) inventoryItems[i];
+                Product plantProduct = plant.getProductParameters();
+                inventoryDataString = inventoryDataString+delimiter+"PLANT"+separator+plant.getName()+separator+plant.getCurrentGrowth()+separator+plant.getGrowthPeriod()+separator+plantProduct.getBuyPrice()+separator+plantProduct.getSellPrice();
+            } else if(inventoryItems[i] instanceof Product) {
+                Product product = (Product) inventoryItems[i];
+                inventoryDataString = inventoryDataString+delimiter+"PRODUCT"+separator+product.getName()+separator+product.getBuyPrice()+separator+product.getSellPrice();
+            }
+        }
+
+        dataStrings.add(playerDataString);
+        dataStrings.add(inventoryDataString);
+
+        String[] mapEncoding = this.map.getMapEncoding(delimiter);
+
+        for(int i = 0; i < mapEncoding.length; i++) {
+            dataStrings.add(mapEncoding[i]);
+        }
+
+        StorageManager storageManager = new StorageManager();
+
+        //Source  https://stackoverflow.com/a/5374359/20792752
+        String[] dataStringsArray = new String[dataStrings.size()];
+        dataStringsArray = dataStrings.toArray(dataStringsArray);
+
+        storageManager.save(dataStringsArray);
     }
 
     public void quit(){

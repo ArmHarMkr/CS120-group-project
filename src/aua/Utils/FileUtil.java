@@ -1,8 +1,8 @@
-package aua.Utils;
+package aua.utils;
 import java.io.*;
 
 public class FileUtil {
-    public static void saveStringToFile(String[] content, String path) throws FileNotFoundException, IOException {
+    public static void saveStringsToFile(String[] content, String path) throws FileNotFoundException, IOException {
         PrintWriter outputStream = null;
 
         outputStream = new PrintWriter(new FileOutputStream(path));
@@ -12,8 +12,6 @@ public class FileUtil {
         }
 
         outputStream.close();
-
-
     }
 
     public static String[] loadStringsFromFile(String path) throws FileNotFoundException,IOException {
@@ -40,3 +38,4 @@ public class FileUtil {
         return dataWithAppropriateArrayLength;
     }
 }
+

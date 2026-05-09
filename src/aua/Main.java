@@ -8,5 +8,10 @@ public class Main {
         GameManager gameManager = new GameManager();
         ConsoleInterface consoleInterface = new ConsoleInterface(gameManager);
         consoleInterface.start();
+        try {
+            gameManager.save();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 }

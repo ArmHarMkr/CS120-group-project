@@ -1,6 +1,6 @@
 package aua.core;
 
-public class Product extends WorldObject {
+public class Product extends WorldObject implements Cloneable {
 
     private int sellPrice;
     private int buyPrice;
@@ -19,6 +19,16 @@ public class Product extends WorldObject {
 
     public WorldObject copy(){
         return new Product(this);
+    }
+
+    public Product clone() throws CloneNotSupportedException{
+        Product product = (Product) super.clone();
+
+        product.buyPrice = this.buyPrice;
+        product.sellPrice = this.sellPrice;
+        product.name = this.name;
+
+        return product;
     }
 
     public int getSellPrice(){
