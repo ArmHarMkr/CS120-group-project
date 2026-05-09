@@ -41,6 +41,26 @@ public class GameMap {
         return isInside(x, y) && tiles[y][x].place(object);
     }
 
+    public Product collectPlant(int x, int y){
+        if(!isInside(x, y)){
+            return null;
+        }
+
+        WorldObject object = tiles[y][x].getObject();
+        if(!(object instanceof Plant)){
+            return null;
+        }
+
+        Plant plant = (Plant) object;
+        Product product = plant.collect();
+        if(product == null){
+            return null;
+        }
+
+        tiles[y][x].remove();
+        return product;
+    }
+
     public int getWidth(){
         return width;
     }

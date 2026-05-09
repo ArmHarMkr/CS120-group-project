@@ -164,9 +164,9 @@ public class GameManager {
     }
 
     private void addStartingPlants(){
-        player.addToInventory(new Plant("Carrot Seed", 4));
-        player.addToInventory(new Plant("Carrot Seed", 4));
-        player.addToInventory(new Plant("Tomato Seed", 6));
+        player.addToInventory(new Plant("Carrot Seed", 4, new Product("Carrot", 0, 2)));
+        player.addToInventory(new Plant("Carrot Seed", 4, new Product("Carrot", 0, 2)));
+        player.addToInventory(new Plant("Tomato Seed", 6, new Product("Tomato", 0, 3)));
     }
 
     public boolean isRunning(){
@@ -179,10 +179,6 @@ public class GameManager {
 
     public String getMessage(){
         return message;
-    }
-
-    public void setMessage(String message){
-        this.message = message;
     }
 
     public String drawInventory(){
