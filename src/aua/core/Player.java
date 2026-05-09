@@ -1,4 +1,4 @@
-package aua.Core;
+package aua.core;
 
 public class Player {
 
@@ -18,23 +18,39 @@ public class Player {
         this.inventory = new Inventory();
     }
 
-    public Inventory getInventory() {
-        return inventory;
+    public boolean addToInventory(Item item) {
+        return inventory.addItem(item);
+    }
+
+    public boolean removeFromInventory(Item item) {
+        return inventory.removeItem(item);
+    }
+
+    public boolean isInventoryFull() {
+        return inventory.isFull();
     }
 
     public int getMoney() {
         return money;
     }
 
+    public Item[] getInventoryItems() {
+        return inventory.getItems();
+    }
+
+    public int getSelectedInventoryIndex() {
+        return inventory.getSelectedIndex();
+    }
+
     public boolean selectItem(int index) {
         return inventory.selectItem(index);
     }
 
-    public WorldObject getSelectedItem() {
+    public Item getSelectedItem() {
         return inventory.getSelectedItem();
     }
 
-    public WorldObject takeSelectedItem() {
+    public Item takeSelectedItem() {
         return inventory.removeSelectedItem();
     }
 
@@ -50,5 +66,9 @@ public class Player {
         if (amount > 0) {
             money += amount;
         }
+    }
+
+    public Product harvest(Tile tile){
+        return null;
     }
 }

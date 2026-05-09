@@ -1,4 +1,4 @@
-package aua.Core;
+package aua.core;
 
 public class Product extends WorldObject {
 
@@ -11,10 +11,21 @@ public class Product extends WorldObject {
         this.sellPrice = sellPrice;
     }
 
+    public Product(Product other){
+        super(other.name);
+        this.buyPrice = other.buyPrice;
+        this.sellPrice = other.sellPrice;
+    }
+
+    public WorldObject copy(){
+        return new Product(this);
+    }
+
     public int getSellPrice(){
         return sellPrice;
     }
     public int getBuyPrice(){
         return buyPrice;
     }
+
 }

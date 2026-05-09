@@ -1,4 +1,4 @@
-package aua.Core;
+package aua.core;
 
 public class Tile {
     private TerrainType type;
@@ -39,6 +39,8 @@ public class Tile {
         object = null;
         return temp;
     }
+
+
 
     public WorldObject getObject(){
         return object;
