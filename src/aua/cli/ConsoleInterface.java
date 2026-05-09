@@ -41,22 +41,26 @@ public class ConsoleInterface {
             return;
         }
 
-        char input = Character.toLowerCase(command.charAt(0));
+        try {
+            char input = Character.toLowerCase(command.charAt(0));
 
-        if(Character.isDigit(input)){
-            gameManager.selectInventoryItem(Character.getNumericValue(input) - 1);
-        } else if(input == 'q'){
-            gameManager.quit();
-        } else if(input == 'p'){
-            handlePlanting();
-        } else if(input == 'h'){
-            handleCollecting();
-        } else {
-            gameManager.handleMovement(input);
+            if(Character.isDigit(input)){
+                gameManager.selectInventoryItem(Character.getNumericValue(input) - 1);
+            } else if(input == 'q'){
+                gameManager.quit();
+            } else if(input == 'p'){
+                handlePlanting();
+            } else if(input == 'h'){
+                handleCollecting();
+            } else {
+                gameManager.handleMovement(input);
+            }
+        } catch(GameActionException exception){
+            gameManager.setMessage(exception.getMessage());
         }
     }
 
-    private void handlePlanting(){
+    private void handlePlanting() throws GameActionException {
         System.out.print("Plant direction (Q/W/E/A/S/D/Z/C): ");
 
         if(!scanner.hasNextLine()){
@@ -72,7 +76,7 @@ public class ConsoleInterface {
         }
     }
 
-    private void handleCollecting(){
+    private void handleCollecting() throws GameActionException {
         System.out.print("Collect direction (Q/W/E/A/S/D/Z/C): ");
 
         if(!scanner.hasNextLine()){

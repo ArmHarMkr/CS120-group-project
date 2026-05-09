@@ -95,6 +95,28 @@ public class GameManager {
         }
     }
 
+    public void collect(char direction) throws GameActionException {
+        direction = Character.toLowerCase(direction);
+
+        Point target = getTargetPoint(direction);
+        if(target == null){
+            throw new InvalidDirectionException("Choose where to collect after pressing H: Q, W, E, A, S, D, Z, or C.");
+        }
+
+        if(player.isInventoryFull()){
+            throw new InvalidGameActionException("Inventory is full.");
+        }
+
+        Product product = map.collectPlant(target.getX(), target.getY());
+        if(product == null){
+            throw new InvalidGameActionException("There is no mature plant to collect there.");
+        }
+
+        player.addToInventory(product);
+        this.tickAll();
+        message = "Collected " + product.getName() + ".";
+    }
+
     private Point getTargetPoint(char direction){
         int targetX = playerPosition.getX();
         int targetY = playerPosition.getY();
@@ -179,6 +201,10 @@ public class GameManager {
 
     public String getMessage(){
         return message;
+    }
+
+    public void setMessage(String message){
+        this.message = message;
     }
 
     public String drawInventory(){
