@@ -1,6 +1,7 @@
 package aua.cli;
 
 import aua.core.GameManager;
+import aua.core.exceptions.GameActionException;
 
 import java.util.Scanner;
 

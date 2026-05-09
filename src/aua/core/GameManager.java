@@ -1,5 +1,10 @@
 package aua.core;
 
+import aua.core.exceptions.GameActionException;
+import aua.core.exceptions.InvalidDirectionException;
+import aua.core.exceptions.InvalidGameActionException;
+import aua.core.exceptions.InvalidInventorySelectionException;
+
 public class GameManager {
     private static final int width = 21;
     private static final int height = 21;
@@ -35,7 +40,7 @@ public class GameManager {
         message = "Thanks for playing.";
     }
 
-    public void handleMovement(char input){
+    public void handleMovement(char input) throws GameActionException {
         input = Character.toLowerCase(input);
         int nextX = playerPosition.getX();
         int nextY = playerPosition.getY();
@@ -49,40 +54,36 @@ public class GameManager {
         } else if(input == 'd'){
             nextX++;
         } else {
-            message = "Unknown command.";
-            return;
+            throw new InvalidDirectionException("Unknown command.");
         }
 
         movePlayer(nextX, nextY);
     }
 
-    public void selectInventoryItem(int index){
+    public void selectInventoryItem(int index) throws GameActionException {
         if(player.selectItem(index)){
             Item selectedItem = player.getSelectedItem();
             message = "Selected " + selectedItem.getName() + ".";
         } else {
-            message = "No item in that inventory slot.";
+            throw new InvalidInventorySelectionException("No item in that inventory slot.");
         }
     }
 
-    public void plant(char direction){
+    public void plant(char direction) throws GameActionException {
         Item selectedItem = player.getSelectedItem();
 
         if(!(selectedItem instanceof Plant)){
-            message = "Select a plant from your inventory first.";
-            return;
+            throw new InvalidGameActionException("Select a plant from your inventory first.");
         }
 
         direction = Character.toLowerCase(direction);
         if(direction == ' '){
-            message = "Choose where to plant after pressing P: Q, W, E, A, S, D, Z, or C.";
-            return;
+            throw new InvalidDirectionException("Choose where to plant after pressing P: Q, W, E, A, S, D, Z, or C.");
         }
 
         Point target = getTargetPoint(direction);
         if(target == null){
-            message = "Choose where to plant after pressing P: Q, W, E, A, S, D, Z, or C.";
-            return;
+            throw new InvalidDirectionException("Choose where to plant after pressing P: Q, W, E, A, S, D, Z, or C.");
         }
 
         if(map.placeObject(target.getX(), target.getY(), (WorldObject) selectedItem)){
@@ -90,33 +91,8 @@ public class GameManager {
             this.tickAll();
             message = "Planted " + plant.getName() + ".";
         } else {
-            message = "You can only plant on empty soil next to you.";
+            throw new InvalidGameActionException("You can only plant on empty soil next to you.");
         }
-    }
-
-    public void collect(char direction){
-        direction = Character.toLowerCase(direction);
-
-        Point target = getTargetPoint(direction);
-        if(target == null){
-            message = "Choose where to collect after pressing H: Q, W, E, A, S, D, Z, or C.";
-            return;
-        }
-
-        if(player.isInventoryFull()){
-            message = "Inventory is full.";
-            return;
-        }
-
-        Product product = map.collectPlant(target.getX(), target.getY());
-        if(product == null){
-            message = "There is no mature plant to collect there.";
-            return;
-        }
-
-        player.addToInventory(product);
-        this.tickAll();
-        message = "Collected " + product.getName() + ".";
     }
 
     private Point getTargetPoint(char direction){
@@ -163,14 +139,14 @@ public class GameManager {
         }
     }
 
-    private void movePlayer(int nextX, int nextY){
+    private void movePlayer(int nextX, int nextY) throws GameActionException {
         if(map.isWalkable(nextX, nextY)){
             playerPosition.setX(nextX);
             playerPosition.setY(nextY);
             this.tickAll();
             message = "Moved to (" + nextX + ", " + nextY + ").";
         } else {
-            message = "You cannot walk there.";
+            throw new InvalidGameActionException("You cannot walk there.");
         }
     }
 
