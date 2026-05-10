@@ -1,5 +1,8 @@
 package aua.core;
 
+import aua.Utils.StringUtil;
+import aua.core.exceptions.MalformedStringException;
+
 public class GameMap {
     private final int SHOPX = 1;
     private Tile[][] tiles;
@@ -25,6 +28,44 @@ public class GameMap {
             }
         }
         tiles[SHOPX][3] = new Tile(TerrainType.SHOP);
+    }
+
+    public GameMap(String metadata, String[] reconstructableStrings) throws NumberFormatException {
+        String[] parsedMetadata = StringUtil.parseDelimitedString(metadata);
+
+        if(parsedMetadata[0].equals("GAMEMAP")){
+            String[] mapSizes = StringUtil.parseDelimitedString(parsedMetadata[1], StringUtil.separator);
+            this.width = Integer.parseInt(mapSizes[0]);
+            this.height = Integer.parseInt(mapSizes[1]);
+        } else {
+            throw new MalformedStringException();
+        }
+
+        this.tiles = new Tile[this.height][this.width];
+
+        for (int i = 0; i < reconstructableStrings.length; i++) {
+            String[] parsedReconstrucatbleString = StringUtil.parseDelimitedString(reconstructableStrings[i]);
+
+            if (parsedReconstrucatbleString[0].equals("TILE")){
+                for (int j = 1; j < parsedReconstrucatbleString.length; j++) {
+                    String[] parsedTileData = StringUtil.parseDelimitedString(parsedReconstrucatbleString[j], StringUtil.separator);
+                    String parsedTileType = parsedTileData[0];
+
+                    int tileY = Integer.parseInt(parsedTileData[1]);
+                    int tileX = Integer.parseInt(parsedTileData[2]);
+
+                    if(parsedTileType.equals("ROCK")){
+                        this.tiles[tileY][tileX] = new Tile(TerrainType.ROCK);
+                    } else if (parsedTileType.equals("ROAD")){
+                        this.tiles[tileY][tileX] = new Tile(TerrainType.ROAD);
+                    } else if(parsedTileType.equals("SOIL")){
+                        this.tiles[tileY][tileX] = new Tile(TerrainType.SOIL);
+                    }
+                }
+            } else {
+                throw new MalformedStringException();
+            }
+        }
     }
 
     public Tile getTile(int x, int y){
@@ -106,13 +147,17 @@ public class GameMap {
         return mapText;
     }
 
-    public String[] getMapEncoding(String delimiter){
+    public String getMapMetadata(){
+        return "GAMEMAP"+StringUtil.defaultDelimiter+this.width+StringUtil.separator+this.height;
+    }
+
+    public String[] getMapEncoding(){
         String[] mapEncoding = new String[this.height];
-        String separator = "-";
-        for(int y = 0; y < height; y++){
+
+        for(int y = 0; y < mapEncoding.length; y++){
             mapEncoding[y] = "TILE";
             for(int x = 0; x < width; x++){
-                mapEncoding[y] = mapEncoding[y]+delimiter+this.tiles[y][x].getType()+separator+y+separator+x;
+                mapEncoding[y] = mapEncoding[y]+StringUtil.defaultDelimiter+this.tiles[y][x].getType()+StringUtil.separator+y+StringUtil.separator+x;
             }
         }
 

@@ -1,5 +1,8 @@
 package aua.core;
 
+import aua.Utils.StringUtil;
+import aua.core.exceptions.MalformedStringException;
+
 public class Product extends WorldObject implements Cloneable {
 
     private int sellPrice;
@@ -15,6 +18,17 @@ public class Product extends WorldObject implements Cloneable {
         super(other.name);
         this.buyPrice = other.buyPrice;
         this.sellPrice = other.sellPrice;
+    }
+
+    public Product(String reconstructableString) throws NumberFormatException {
+        String[] parsedData = StringUtil.parseDelimitedString(reconstructableString, StringUtil.separator);
+        if(parsedData[0].equals("PRODUCT")){
+            this.name = parsedData[1];
+            this.buyPrice = Integer.parseInt(parsedData[2]);
+            this.sellPrice = Integer.parseInt(parsedData[3]);
+        } else {
+            throw new MalformedStringException();
+        }
     }
 
     public WorldObject copy(){
