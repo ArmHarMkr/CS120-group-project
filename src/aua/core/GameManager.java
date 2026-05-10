@@ -58,7 +58,7 @@ public class GameManager {
 
 
     public static GameManager load() throws IOException, MalformedStringException, NumberFormatException {
-        GameManager reconstructedGamemanager = new GameManager();
+        GameManager reconstructedGameManager = new GameManager();
 
         StorageManager storageManager = new StorageManager();
 
@@ -67,20 +67,26 @@ public class GameManager {
         String playerString = storedStrings[0];
         String inventoryString = storedStrings[1];
 
-        reconstructedGamemanager.player = new Player(playerString, inventoryString);
 
-        String mapMetadata = storedStrings[2];
+        reconstructedGameManager.player = new Player(playerString, inventoryString);
 
-        int mapHeight = storedStrings.length - 3;
+        String mapMetadata = storedStrings[3];
+
+        int mapHeight = storedStrings.length - 4;
         String[] mapTileData = new String[mapHeight];
         int index = 0;
 
-        for (int i = 3; i < storedStrings.length; i++) {
+        for (int i = 4; i < storedStrings.length; i++) {
             mapTileData[index] = storedStrings[i];
             index++;
         }
 
-        reconstructedGamemanager.map = new GameMap(mapMetadata, mapTileData);
+        reconstructedGameManager.map = new GameMap(mapMetadata, mapTileData);
+
+        String shopString = storedStrings[2];
+
+        reconstructedGameManager.shop = new Shop(shopString);
+
 
         String[] parsedPlayerString = StringUtil.parseDelimitedString(playerString);
         if(parsedPlayerString[0].equals("PLAYER")){
@@ -89,12 +95,12 @@ public class GameManager {
             int playerX =  Integer.parseInt(coordinates[0]);
             int playerY =  Integer.parseInt(coordinates[1]);
 
-            reconstructedGamemanager.playerPosition = new Point(playerX, playerY);
+            reconstructedGameManager.playerPosition = new Point(playerX, playerY);
         } else {
             throw new MalformedStringException();
         }
 
-        return reconstructedGamemanager;
+        return reconstructedGameManager;
     }
 
     public void save() throws FileNotFoundException, IOException, CloneNotSupportedException {
@@ -106,6 +112,7 @@ public class GameManager {
 
         String inventoryDataString = "INVENTORY";
         Item[] inventoryItems = this.player.getInventoryItems();
+
 
         for (int i = 0; i < inventoryItems.length; i++) {
             if(inventoryItems[i] instanceof WorldObject){
@@ -119,6 +126,8 @@ public class GameManager {
 
         dataStrings.add(playerDataString);
         dataStrings.add(inventoryDataString);
+
+        dataStrings.add(this.shop.toString());
 
         String mapMetadata = this.map.getMapMetadata();
         dataStrings.add(mapMetadata);
