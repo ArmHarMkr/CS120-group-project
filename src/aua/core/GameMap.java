@@ -1,6 +1,6 @@
 package aua.core;
 
-import aua.Utils.StringUtil;
+import aua.utils.StringUtil;
 import aua.core.exceptions.MalformedStringException;
 
 public class GameMap {
@@ -54,12 +54,19 @@ public class GameMap {
                     int tileY = Integer.parseInt(parsedTileData[1]);
                     int tileX = Integer.parseInt(parsedTileData[2]);
 
+
                     if(parsedTileType.equals("ROCK")){
                         this.tiles[tileY][tileX] = new Tile(TerrainType.ROCK);
                     } else if (parsedTileType.equals("ROAD")){
                         this.tiles[tileY][tileX] = new Tile(TerrainType.ROAD);
                     } else if(parsedTileType.equals("SOIL")){
-                        this.tiles[tileY][tileX] = new Tile(TerrainType.SOIL);
+                        if(parsedTileData.length>3 && parsedTileData[3].equals("PLANT")){
+                            String plantString = parsedTileData[3]+StringUtil.separator+parsedTileData[4]+StringUtil.separator+parsedTileData[5]+StringUtil.separator+parsedTileData[6]+StringUtil.separator+parsedTileData[7]+StringUtil.separator+parsedTileData[8]+StringUtil.separator+parsedTileData[9];
+                            Plant plant = new Plant(plantString);
+                            this.tiles[tileY][tileX] = new Tile(TerrainType.SOIL, plant);
+                        } else {
+                            this.tiles[tileY][tileX] = new Tile(TerrainType.SOIL);
+                        }
                     }
                 }
             } else {
@@ -157,7 +164,12 @@ public class GameMap {
         for(int y = 0; y < mapEncoding.length; y++){
             mapEncoding[y] = "TILE";
             for(int x = 0; x < width; x++){
-                mapEncoding[y] = mapEncoding[y]+StringUtil.defaultDelimiter+this.tiles[y][x].getType()+StringUtil.separator+y+StringUtil.separator+x;
+                WorldObject tileObject = this.tiles[y][x].getObject();
+                if(tileObject!=null){
+                    mapEncoding[y] = mapEncoding[y]+StringUtil.defaultDelimiter+this.tiles[y][x].getType()+StringUtil.separator+y+StringUtil.separator+x+StringUtil.separator+tileObject;
+                } else {
+                    mapEncoding[y] = mapEncoding[y]+StringUtil.defaultDelimiter+this.tiles[y][x].getType()+StringUtil.separator+y+StringUtil.separator+x+StringUtil.separator+"EMPTY";
+                }
             }
         }
 

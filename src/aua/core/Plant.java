@@ -1,6 +1,6 @@
 package aua.core;
 
-import aua.Utils.StringUtil;
+import aua.utils.StringUtil;
 import aua.core.exceptions.MalformedStringException;
 
 public class Plant extends WorldObject {
@@ -81,4 +81,7 @@ public class Plant extends WorldObject {
     }
 
 
+    public String toString(){
+        return "PLANT"+StringUtil.separator+this.getName()+StringUtil.separator+this.getCurrentGrowth()+StringUtil.separator+this.getGrowthPeriod()+StringUtil.separator+this.harvestProduct.getName()+StringUtil.separator+this.harvestProduct.getBuyPrice()+StringUtil.separator+this.harvestProduct.getSellPrice();
+    }
 }

@@ -8,6 +8,11 @@ public class Tile {
         this.type = type;
     }
 
+    public Tile(TerrainType type, WorldObject object){
+        this.object = object;
+        this.type = type;
+    }
+
     public boolean isWalkable(){
 
         if(object != null){
@@ -49,4 +54,5 @@ public class Tile {
     public TerrainType getType(){
         return type;
     }
+
 }

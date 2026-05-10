@@ -1,6 +1,6 @@
 package aua.core;
 
-import aua.Utils.StringUtil;
+import aua.utils.StringUtil;
 import aua.core.exceptions.MalformedStringException;
 
 public class Product extends WorldObject implements Cloneable {
@@ -50,6 +50,10 @@ public class Product extends WorldObject implements Cloneable {
     }
     public int getBuyPrice(){
         return buyPrice;
+    }
+
+    public String toString(){
+        return "PRODUCT"+StringUtil.separator+this.getName()+StringUtil.separator+this.getBuyPrice()+StringUtil.separator+this.getSellPrice();
     }
 
 }

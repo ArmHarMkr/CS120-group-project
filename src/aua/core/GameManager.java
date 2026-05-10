@@ -1,6 +1,6 @@
 package aua.core;
 
-import aua.Utils.StringUtil;
+import aua.utils.StringUtil;
 import aua.core.exceptions.*;
 
 import java.io.FileNotFoundException;
@@ -110,11 +110,10 @@ public class GameManager {
         for (int i = 0; i < inventoryItems.length; i++) {
             if(inventoryItems[i] instanceof WorldObject){
                 Plant plant = (Plant) inventoryItems[i];
-                Product plantProduct = plant.getProductParameters();
-                inventoryDataString = inventoryDataString+delimiter+"PLANT"+separator+plant.getName()+separator+plant.getCurrentGrowth()+separator+plant.getGrowthPeriod()+separator+plantProduct.getName()+separator+plantProduct.getBuyPrice()+separator+plantProduct.getSellPrice();
+                inventoryDataString = inventoryDataString+delimiter+plant;
             } else if(inventoryItems[i] instanceof Product) {
                 Product product = (Product) inventoryItems[i];
-                inventoryDataString = inventoryDataString+delimiter+"PRODUCT"+separator+product.getName()+separator+product.getBuyPrice()+separator+product.getSellPrice();
+                inventoryDataString = inventoryDataString+delimiter+product;
             }
         }
 
