@@ -312,6 +312,39 @@ public class GameManager {
         return map.draw(playerPosition.getX(), playerPosition.getY());
     }
 
+    public int getMapWidth(){
+        return map.getWidth();
+    }
+
+    public int getMapHeight(){
+        return map.getHeight();
+    }
+
+    public int getPlayerX(){
+        return playerPosition.getX();
+    }
+
+    public int getPlayerY(){
+        return playerPosition.getY();
+    }
+
+    public TerrainType getTerrainTypeAt(int x, int y){
+        return map.getTile(x, y).getType();
+    }
+
+    public boolean hasPlantAt(int x, int y){
+        return map.getTile(x, y).getObject() instanceof Plant;
+    }
+
+    public boolean isMaturePlantAt(int x, int y){
+        if(!(map.getTile(x, y).getObject() instanceof Plant)){
+            return false;
+        }
+
+        Plant plant = (Plant) map.getTile(x, y).getObject();
+        return plant.isReady();
+    }
+
     public String getMessage(){
         return message;
     }

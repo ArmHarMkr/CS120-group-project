@@ -6,31 +6,28 @@ import aua.ui.GrandmasGardenUI;
 
 public class Main {
     public static void main(String[] args) {
-//        GameManager gameManager = new GameManager();
-//        GrandmasGardenConsole consoleInterface = new GrandmasGardenConsole(gameManager);
-//        consoleInterface.start();
-//        try{
-//            gameManager.save();
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-        args = new String[]{"-ui"};
+        args = new String[] {"-ui"};
         String mode = args.length > 0 ? args[0] : "-ui" ;
-
 
         try {
             GameManager gameManager = GameManager.load();
             switch(mode){
                 case "-ui":
-                    GrandmasGardenUI ui = new GrandmasGardenUI();
+                    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            GrandmasGardenUI ui = new GrandmasGardenUI(gameManager);
+                            ui.start();
+                        }
+                    });
                     break;
                 case "-cli":
                     GrandmasGardenConsole consoleInterface = new GrandmasGardenConsole(gameManager);
                     consoleInterface.start();
+                    gameManager.save();
                     break;
+                default:
+                    throw new IllegalArgumentException("Unknown mode: " + mode);
             }
-
-            gameManager.save();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
