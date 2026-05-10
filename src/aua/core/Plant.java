@@ -19,6 +19,10 @@ public class Plant extends WorldObject {
         this.harvestProduct = harvestProduct;
 
     }
+    public int getBuyPrice(){
+        return harvestProduct.getBuyPrice();
+    }
+
     public Plant(Plant other){
         super(other.name);
         this.growthPeriod = other.growthPeriod;

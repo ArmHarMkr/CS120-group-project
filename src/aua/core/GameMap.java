@@ -4,6 +4,7 @@ import aua.Utils.StringUtil;
 import aua.core.exceptions.MalformedStringException;
 
 public class GameMap {
+    private final int SHOPX = 1;
     private Tile[][] tiles;
     private int width;
     private int height;
@@ -26,6 +27,7 @@ public class GameMap {
                 }
             }
         }
+        tiles[SHOPX][3] = new Tile(TerrainType.SHOP);
     }
 
     public GameMap(String metadata, String[] reconstructableStrings) throws NumberFormatException {
@@ -78,6 +80,10 @@ public class GameMap {
         return isInside(x, y) && tiles[y][x].isWalkable();
     }
 
+    public boolean isShop(int x, int y){
+        return isInside(x, y) && tiles[y][x].getType() == TerrainType.SHOP;
+    }
+
     public boolean placeObject(int x, int y, WorldObject object){
         return isInside(x, y) && tiles[y][x].place(object);
     }
@@ -117,7 +123,10 @@ public class GameMap {
             for(int j = 0; j < width; j++){
                 if(j == playerX && i == playerY){
                     mapText += '@';
-                } else if(tiles[i][j].getObject() instanceof Plant){
+                } else if(tiles[i][j].getType() == TerrainType.SHOP){
+                    mapText += 'S';
+                }
+                else if(tiles[i][j].getObject() instanceof Plant){
                     Plant plant = (Plant) tiles[i][j].getObject();
                     if(plant.isReady()){
                         mapText += 'M';
