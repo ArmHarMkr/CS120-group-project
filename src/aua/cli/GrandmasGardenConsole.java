@@ -1,15 +1,16 @@
 package aua.cli;
 
 import aua.core.GameManager;
+import aua.core.Playable;
 import aua.core.exceptions.GameActionException;
 
 import java.util.Scanner;
 
-public class ConsoleInterface {
+public class GrandmasGardenConsole implements Playable {
     private GameManager gameManager;
     private Scanner scanner;
 
-    public ConsoleInterface(GameManager gameManager){
+    public GrandmasGardenConsole(GameManager gameManager){
         this.gameManager = gameManager;
         this.scanner = new Scanner(System.in);
     }
@@ -37,7 +38,7 @@ public class ConsoleInterface {
         System.out.println(gameManager.getMessage());
     }
 
-    private void draw(){
+    public void draw(){
         System.out.println(gameManager.drawMap());
         System.out.println("@ player, . road, , soil, # rock, P plant, M mature plant and S is a shop");
         System.out.println("W/A/S/D move | P plant | H collect | 1-9 select item | Q quit| E enter | X exit");
@@ -74,7 +75,7 @@ public class ConsoleInterface {
         }
     }
 
-    private void handlePlanting() throws GameActionException {
+    public void handlePlanting() throws GameActionException {
         System.out.print("Plant direction (Q/W/E/A/S/D/Z/C): ");
 
         if(!scanner.hasNextLine()){
@@ -90,7 +91,7 @@ public class ConsoleInterface {
         }
     }
 
-    private void handleCollecting() throws GameActionException {
+    public void handleCollecting() throws GameActionException {
         System.out.print("Collect direction (Q/W/E/A/S/D/Z/C): ");
 
         if(!scanner.hasNextLine()){
@@ -106,7 +107,7 @@ public class ConsoleInterface {
         }
     }
 
-    private void drawShop(){
+    public void drawShop(){
         System.out.println(gameManager.drawShop());
         System.out.println(gameManager.getMessage());
     }
