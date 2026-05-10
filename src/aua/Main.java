@@ -31,8 +31,8 @@ public class Main {
             }
 
             gameManager.save();
-        }catch (Exception e){
-            System.out.println(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

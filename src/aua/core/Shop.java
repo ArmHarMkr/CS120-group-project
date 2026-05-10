@@ -1,7 +1,9 @@
 package aua.core;
 
-public class Shop {
+import aua.core.exceptions.MalformedStringException;
+import aua.utils.StringUtil;
 
+public class Shop {
     private static final int DEFAULT_CAPACITY = 20;
 
     private Item[] products;
@@ -16,6 +18,25 @@ public class Shop {
         }
         this.products = new Item[capacity];
         this.size = 0;
+    }
+
+    public Shop(String reconstructableString){
+        this();
+
+        String[] parsedString = StringUtil.parseDelimitedString(reconstructableString);
+
+        if(parsedString[0].equals("SHOP")){
+            for (int i = 1; i < parsedString.length; i++) {
+                String[] parsedItemData = StringUtil.parseDelimitedString(parsedString[i], StringUtil.separator);
+                if(parsedItemData.length>0 && parsedItemData[0].equals("PLANT")){
+                    this.addProduct(new Plant(parsedString[i]));
+                } else if (parsedItemData.length>0 && parsedItemData[0].equals("PRODUCT")){
+                    this.addProduct(new Product(parsedString[i]));
+                }
+            }
+        } else {
+            throw new MalformedStringException();
+        }
     }
 
     public boolean addProduct(Item product) {
@@ -78,5 +99,22 @@ public class Shop {
 
     public boolean isFull() {
         return size == products.length;
+    }
+
+    public String toString(){
+        String shopString = "SHOP"+StringUtil.defaultDelimiter;
+
+        for (int i = 0; i < size; i++) {
+            if(this.products[i]!=null){
+                if(i!=size-1){
+                    shopString = shopString+products[i].toString()+StringUtil.defaultDelimiter;
+                } else {
+                    shopString = shopString+products[i].toString();
+                }
+
+            }
+        }
+
+        return shopString;
     }
 }

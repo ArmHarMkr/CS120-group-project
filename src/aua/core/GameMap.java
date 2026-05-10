@@ -67,6 +67,8 @@ public class GameMap {
                         } else {
                             this.tiles[tileY][tileX] = new Tile(TerrainType.SOIL);
                         }
+                    } else if(parsedTileType.equals("SHOP")){
+                        this.tiles[tileY][tileX] = new Tile(TerrainType.SHOP);
                     }
                 }
             } else {
