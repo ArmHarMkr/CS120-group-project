@@ -1,6 +1,6 @@
 package aua.core;
 
-import aua.Utils.StringUtil;
+import aua.utils.StringUtil;
 import aua.core.exceptions.MalformedStringException;
 
 public class Player {
