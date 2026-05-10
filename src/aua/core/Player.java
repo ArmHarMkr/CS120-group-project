@@ -1,5 +1,8 @@
 package aua.core;
 
+import aua.Utils.StringUtil;
+import aua.core.exceptions.MalformedStringException;
+
 public class Player {
 
     private static final int DEFAULT_MONEY = 100;
@@ -16,6 +19,38 @@ public class Player {
             money = DEFAULT_MONEY;}
         this.money = money;
         this.inventory = new Inventory();
+    }
+
+    public Player(String playerReconstructableString, String inventoryReconstructableString) throws MalformedStringException, NumberFormatException {
+        String[] playerData = StringUtil.parseDelimitedString(playerReconstructableString);
+        if(playerData[0].equals("PLAYER")){
+            int money = Integer.parseInt(playerData[2]);
+            this.addMoney(money);
+        }else {
+            throw new MalformedStringException();
+        }
+
+        String[] inventoryData = StringUtil.parseDelimitedString(inventoryReconstructableString);
+        if(inventoryData[0].equals("INVENTORY")){
+            Inventory reconstructedInventory = new Inventory();
+
+            for(int i = 1; i < inventoryData.length; i++){
+                String[] parsedInventoryItemData = StringUtil.parseDelimitedString(inventoryData[i],StringUtil.separator);
+                if (parsedInventoryItemData[0].equals("PLANT")){
+                    Plant reconstructedPlant = new Plant(inventoryData[i]);
+                    reconstructedInventory.addItem(reconstructedPlant);
+                } else if (parsedInventoryItemData[0].equals("PRODUCT")){
+                    Product reconstructedProduct = new Product(inventoryData[i]);
+                    reconstructedInventory.addItem(reconstructedProduct);
+                }
+            }
+
+            this.inventory = reconstructedInventory;
+
+        } else {
+            throw new MalformedStringException();
+        }
+
     }
 
     public boolean addToInventory(Item item) {

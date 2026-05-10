@@ -1,15 +1,14 @@
 package aua.core;
 
-import aua.core.exceptions.GameActionException;
-import aua.core.exceptions.InvalidDirectionException;
-import aua.core.exceptions.InvalidGameActionException;
-import aua.core.exceptions.InvalidInventorySelectionException;
+import aua.Utils.StringUtil;
+import aua.core.exceptions.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class GameManager {
+    private static final String separator = "-";
     private static final int width = 21;
     private static final int height = 21;
     private GameMap map;
@@ -31,13 +30,49 @@ public class GameManager {
         this.message = "Use roads to move around the map.";
     }
 
-    public void load(){
+    public static GameManager load() throws IOException, MalformedStringException, NumberFormatException {
+        GameManager reconstructedGamemanager = new GameManager();
 
+        StorageManager storageManager = new StorageManager();
+
+        String[] storedStrings = storageManager.load();
+
+        String playerString = storedStrings[0];
+        String inventoryString = storedStrings[1];
+
+        reconstructedGamemanager.player = new Player(playerString, inventoryString);
+
+        String mapMetadata = storedStrings[2];
+
+        int mapHeight = storedStrings.length - 3;
+        String[] mapTileData = new String[mapHeight];
+        int index = 0;
+
+        for (int i = 3; i < storedStrings.length; i++) {
+            mapTileData[index] = storedStrings[i];
+            index++;
+        }
+
+        reconstructedGamemanager.map = new GameMap(mapMetadata, mapTileData);
+
+        String[] parsedPlayerString = StringUtil.parseDelimitedString(playerString);
+        if(parsedPlayerString[0].equals("PLAYER")){
+            String[] coordinates = StringUtil.parseDelimitedString(parsedPlayerString[1], StringUtil.separator);
+
+            int playerX =  Integer.parseInt(coordinates[0]);
+            int playerY =  Integer.parseInt(coordinates[1]);
+
+            reconstructedGamemanager.playerPosition = new Point(playerX, playerY);
+        } else {
+            throw new MalformedStringException();
+        }
+
+        return reconstructedGamemanager;
     }
 
     public void save() throws FileNotFoundException, IOException, CloneNotSupportedException {
-        String delimiter = "%%";
-        String separator = "-";
+        String delimiter = StringUtil.defaultDelimiter;
+        String separator = StringUtil.separator;
 
         ArrayList<String> dataStrings = new ArrayList<String>();
         String playerDataString = "PLAYER"+delimiter+playerPosition.getX()+separator+playerPosition.getY()+delimiter+player.getMoney();
@@ -49,7 +84,7 @@ public class GameManager {
             if(inventoryItems[i] instanceof WorldObject){
                 Plant plant = (Plant) inventoryItems[i];
                 Product plantProduct = plant.getProductParameters();
-                inventoryDataString = inventoryDataString+delimiter+"PLANT"+separator+plant.getName()+separator+plant.getCurrentGrowth()+separator+plant.getGrowthPeriod()+separator+plantProduct.getBuyPrice()+separator+plantProduct.getSellPrice();
+                inventoryDataString = inventoryDataString+delimiter+"PLANT"+separator+plant.getName()+separator+plant.getCurrentGrowth()+separator+plant.getGrowthPeriod()+separator+plantProduct.getName()+separator+plantProduct.getBuyPrice()+separator+plantProduct.getSellPrice();
             } else if(inventoryItems[i] instanceof Product) {
                 Product product = (Product) inventoryItems[i];
                 inventoryDataString = inventoryDataString+delimiter+"PRODUCT"+separator+product.getName()+separator+product.getBuyPrice()+separator+product.getSellPrice();
@@ -59,7 +94,10 @@ public class GameManager {
         dataStrings.add(playerDataString);
         dataStrings.add(inventoryDataString);
 
-        String[] mapEncoding = this.map.getMapEncoding(delimiter);
+        String mapMetadata = this.map.getMapMetadata();
+        dataStrings.add(mapMetadata);
+
+        String[] mapEncoding = this.map.getMapEncoding();
 
         for(int i = 0; i < mapEncoding.length; i++) {
             dataStrings.add(mapEncoding[i]);

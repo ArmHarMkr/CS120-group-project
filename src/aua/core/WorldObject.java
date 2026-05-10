@@ -7,6 +7,9 @@ public abstract class WorldObject implements Item {
     public WorldObject(String name){
         this.name = name;
     }
+    public WorldObject(){
+        this.name = "";
+    }
 
     public String getName(){ return name; }
     public abstract WorldObject copy();
