@@ -16,22 +16,31 @@ public class ConsoleInterface {
 
     public void start(){
         while(gameManager.isRunning()){
-            draw();
-            System.out.print("Command: ");
-
-            if(!scanner.hasNextLine()){
-                gameManager.quit();
-                return;
+            if(gameManager.isInShop()){
+                drawShop();
+                System.out.print("Command: ");
+                if(!scanner.hasNextLine()){
+                    gameManager.quit();
+                    return;
+                }
+                handleShopCommand(scanner.nextLine().trim());
+            } else {
+                draw();
+                System.out.print("Command: ");
+                if(!scanner.hasNextLine()){
+                    gameManager.quit();
+                    return;
+                }
+                handleCommand(scanner.nextLine().trim());
             }
-
-            handleCommand(scanner.nextLine().trim());
         }
+        System.out.println(gameManager.getMessage());
     }
 
     private void draw(){
         System.out.println(gameManager.drawMap());
-        System.out.println("@ player, . road, , soil, # rock, P plant, M mature plant");
-        System.out.println("W/A/S/D move | P plant | H collect | 1-9 select item | Q quit");
+        System.out.println("@ player, . road, , soil, # rock, P plant, M mature plant and S is a shop");
+        System.out.println("W/A/S/D move | P plant | H collect | 1-9 select item | Q quit| E enter | X exit");
         System.out.println(gameManager.drawInventory());
         System.out.println(gameManager.getMessage());
     }
@@ -52,7 +61,12 @@ public class ConsoleInterface {
                 handlePlanting();
             } else if(input == 'h'){
                 handleCollecting();
-            } else {
+            } else if(input == 'e') {
+                gameManager.enterShop();
+            }else if(input == 'x') {
+                gameManager.exitShop();
+            }
+            else {
                 gameManager.handleMovement(input);
             }
         } catch(GameActionException exception){
@@ -91,4 +105,50 @@ public class ConsoleInterface {
             gameManager.collect(direction.charAt(0));
         }
     }
+
+    private void drawShop(){
+        System.out.println(gameManager.drawShop());
+        System.out.println(gameManager.getMessage());
+    }
+
+    private void handleShopCommand(String command){
+        if(command == null || command.isEmpty()){
+            return;
+        }
+        try {
+            char input = Character.toLowerCase(command.charAt(0));
+            if(input == 'x'){
+                gameManager.exitShop();
+            } else if(input == 'b'){
+                System.out.print("Buy which item (1-" + gameManager.getShopSize() + "): ");
+                String line = scanner.nextLine().trim();
+                if(line.isEmpty()) return;
+                char number = line.charAt(0);
+                if(!Character.isDigit(number)){
+                    gameManager.setMessage("Please enter a number.");
+                    return;
+                }
+                gameManager.buyItem(Character.getNumericValue(number) - 1);
+
+            } else if(input == 's'){
+                System.out.print("Sell which item (1-" + gameManager.getInventorySize() + "): ");
+                String line = scanner.nextLine().trim();
+                if(line.isEmpty()) return;
+                char number = line.charAt(0);
+                if(!Character.isDigit(number)){
+                    gameManager.setMessage("Please enter a number.");
+                    return;
+                }
+                gameManager.sellItem(Character.getNumericValue(number) - 1);
+
+            } else {
+                gameManager.setMessage("B = buy | S = sell | X = leave");
+            }
+
+        } catch(GameActionException exception){
+            gameManager.setMessage(exception.getMessage());
+        }
+    }
+
+
 }

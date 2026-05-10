@@ -4,7 +4,7 @@ public class Shop {
 
     private static final int DEFAULT_CAPACITY = 20;
 
-    private Product[] products;
+    private Item[] products;
     private int size;
     public Shop() {
         this(DEFAULT_CAPACITY);
@@ -14,11 +14,11 @@ public class Shop {
         if (capacity <= 0) {
             capacity = DEFAULT_CAPACITY;
         }
-        this.products = new Product[capacity];
+        this.products = new Item[capacity];
         this.size = 0;
     }
 
-    public boolean addProduct(Product product) {
+    public boolean addProduct(Item product) {
         if (product == null || isFull()) {
             return false;
         }
@@ -27,20 +27,20 @@ public class Shop {
         return true;
     }
 
-    public boolean buy(Player player, Product product) {
-        if (player == null || product == null) {
+    public boolean buy(Player player, Item item) {
+        if (player == null || item == null) {
             return false;
         }
-        if (!contains(product)) {
+        if (!contains(item)) {
             return false;
         }
         if (player.isInventoryFull()) {
             return false;
         }
-        if (!player.spendMoney(product.getBuyPrice())) {
+        if (!player.spendMoney(item.getBuyPrice())) {
             return false;
         }
-        return player.addToInventory(product);
+        return player.addToInventory(item);
     }
 
     public boolean sell(Player player, Product product) {
@@ -54,7 +54,7 @@ public class Shop {
         return true;
     }
 
-    public boolean contains(Product product) {
+    public boolean contains(Item product) {
         for (int i = 0; i < size; i++) {
             if (products[i] == product) {
                 return true;
@@ -64,8 +64,8 @@ public class Shop {
         return false;
     }
 
-    public Product[] getProducts() {
-        Product[] copy = new Product[size];
+    public Item[] getProducts() {
+        Item[] copy = new Item[size];
         for (int i = 0; i < size; i++) {
             copy[i] = products[i];
         }
