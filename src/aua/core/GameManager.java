@@ -177,7 +177,8 @@ public class GameManager {
         if(player.selectItem(index)){
             Item selectedItem = player.getSelectedItem();
             message = "Selected " + selectedItem.getName() + ".";
-        } else {
+        }
+        else {
             throw new InvalidInventorySelectionException("No item in that inventory slot.");
         }
     }
@@ -203,7 +204,8 @@ public class GameManager {
             Item plant = player.takeSelectedItem();
             this.tickAll();
             message = "Planted " + plant.getName() + ".";
-        } else {
+        }
+        else {
             throw new InvalidGameActionException("You can only plant on empty soil next to you.");
         }
     }

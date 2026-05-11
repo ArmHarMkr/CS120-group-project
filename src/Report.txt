@@ -1,0 +1,26 @@
+Code Review - Suren, Harutyun, Sofi
+UML - ALL
+
+Console
+    Shop - Sofi
+    Map management - Harutyun
+    Player management - Harutyun
+    Farming management - Harutyun
+
+UI
+    Drawing the map - Harutyun
+    Walking on the map - Harutyun
+    Plant growing on the map - Suren
+
+Game Management
+    Plant growing logic - Sofi
+    Inventory logic - Sofi
+    Shops logic - Sofi
+    Player logic - Sofi
+    Product logic - Sofi
+    MalformedStringException - Suren
+    Other Exceptions - Harutyun
+    FileManagement - Suren
+    Player  management - Harutyun
+    Map management - Harutyun
+    Items management - Harutyun

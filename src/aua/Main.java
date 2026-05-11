@@ -13,12 +13,8 @@ public class Main {
             GameManager gameManager = new GameManager();
             switch(mode){
                 case "-ui":
-                    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-                        public void run() {
-                            GrandmasGardenUI ui = new GrandmasGardenUI(gameManager);
-                            ui.start();
-                        }
-                    });
+                    GrandmasGardenUI ui = new GrandmasGardenUI(gameManager);
+                    ui.start();
                     break;
                 case "-cli":
                     GrandmasGardenConsole consoleInterface = new GrandmasGardenConsole(gameManager);

@@ -138,7 +138,7 @@ public class GrandmasGardenUI extends JFrame implements Playable {
     private void loadImages(){
         soilIcon = loadIcon("/aua/images/muddy_ground.jpg");
         rockIcon = loadIcon("/aua/images/Ground_Diffuse.jpg");
-        playerIcon = loadIcon("/aua/images/farmera1.png");
+        playerIcon = loadIcon("/aua/images/farmera1.jpg");
 
         for(int i = 0; i<PLANT_GROWTH_STAGES; i++){
             String path = "/aua/images/wild_plant_grow_"+(i+1)+".png";
