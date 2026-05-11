@@ -1,4 +1,4 @@
-PLAYER%%1-1%%100
+PLAYER%%1-4%%100
 INVENTORY%%PLANT-Carrot Seed-0-4-Carrot-0-2%%PLANT-Carrot Seed-0-4-Carrot-0-2%%PLANT-Tomato Seed-0-6-Tomato-0-3
 SHOP%%PLANT-Carrot Seed-0-4-Carrot-35-2%%PLANT-Tomato Seed-0-6-Tomato-12-3%%PLANT-Potato Seed-0-5-Potato-23-4%%PLANT-Corn Seed-0-8-Corn-12-5%%PLANT-Pumpkin Seed-0-10-Pumpkin-22-7%%PLANT-Watermelon Seed-0-12-Watermelon-77-9%%PLANT-Strawberry Seed-0-7-Strawberry-2-6%%PLANT-Sunflower Seed-0-5-Sunflower-3-3
 GAMEMAP%%21-21

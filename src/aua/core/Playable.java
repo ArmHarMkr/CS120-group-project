@@ -6,5 +6,6 @@ public interface Playable {
     void handlePlanting() throws Exception;
     void handleCollecting() throws Exception;
     void drawShop();
-
+    void load();
+    void save();
 }
