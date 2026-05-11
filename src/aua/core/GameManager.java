@@ -345,6 +345,18 @@ public class GameManager {
         return plant.isReady();
     }
 
+    public int getGrowthRatioAt(int x, int y){
+        if(!hasPlantAt(x,y)){
+            return -1;
+        }
+
+        Plant plant = (Plant) map.getTile(x, y).getObject();
+        double growthPeriod = plant.getGrowthPeriod();
+        double currentGrowthPeriod = plant.getCurrentGrowth();
+        int growthRatio = (int)(currentGrowthPeriod/growthPeriod*10);
+        return growthRatio;
+    }
+
     public String getMessage(){
         return message;
     }
