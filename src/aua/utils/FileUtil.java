@@ -38,4 +38,3 @@ public class FileUtil {
         return dataWithAppropriateArrayLength;
     }
 }
-

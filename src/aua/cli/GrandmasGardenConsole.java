@@ -2,8 +2,12 @@ package aua.cli;
 
 import aua.core.GameManager;
 import aua.core.Playable;
+import aua.core.StorageManager;
 import aua.core.exceptions.GameActionException;
+import aua.utils.FileUtil;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class GrandmasGardenConsole implements Playable {
@@ -38,10 +42,31 @@ public class GrandmasGardenConsole implements Playable {
         System.out.println(gameManager.getMessage());
     }
 
+    public void load(){
+        try{
+            this.gameManager = GameManager.load();
+            System.out.println("The game was successfully loaded");
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void save(){
+        try{
+            this.gameManager.save();
+            System.out.println("The game was successfully saved!");
+        }catch (CloneNotSupportedException e){
+            System.out.println("Error: "+e.getMessage());
+        }catch (FileNotFoundException e){
+            System.out.println("File Not Found: Try again and provide a valid file path");
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+        }}
+
     public void draw(){
         System.out.println(gameManager.drawMap());
         System.out.println("@ player, . road, , soil, # rock, P plant, M mature plant and S is a shop");
-        System.out.println("W/A/S/D move | P plant | H collect | 1-9 select item | Q quit| E enter | X exit");
+        System.out.println("W/A/S/D move | P plant | H collect | 1-9 select item | Q quit| E enter | X exit | L load | K save");
         System.out.println(gameManager.drawInventory());
         System.out.println(gameManager.getMessage());
     }
@@ -66,6 +91,10 @@ public class GrandmasGardenConsole implements Playable {
                 gameManager.enterShop();
             }else if(input == 'x') {
                 gameManager.exitShop();
+            } else if(input == 'l'){
+                load();
+            } else if(input == 'k'){
+                save();
             }
             else {
                 gameManager.handleMovement(input);

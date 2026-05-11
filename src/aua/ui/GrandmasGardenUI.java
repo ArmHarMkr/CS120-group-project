@@ -56,6 +56,14 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         mapPanel.requestFocusInWindow();
     }
 
+    public void save() {
+
+    }
+
+    public void load(){
+
+    }
+
     public void draw() {
         for(int i = 0; i < gameManager.getMapHeight(); i++){
             for(int j = 0; j < gameManager.getMapWidth(); j++){

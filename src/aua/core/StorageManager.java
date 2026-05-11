@@ -6,27 +6,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class StorageManager {
-    private static final String defaultPath = "E:\\AUA Java Projects\\CS120-group-project\\src\\data.txt";
-    private final String path;
+    static final String defaultPath = "/Users/surenpoghosyan/CS120-group-project/src/data.txt";
 
-    public StorageManager(){
-        this.path = defaultPath;
-    }
-
-    public StorageManager(String path){
-        this.path = path;
-    }
-
-    public String getPath(){
-        return this.path;
+    public static String getDefaultPath(){
+        return defaultPath;
     }
 
     public String[] load() throws IOException {
-        return FileUtil.loadStringsFromFile(this.path);
+        return FileUtil.loadStringsFromFile(defaultPath);
     }
 
     public void save(String[] content) throws FileNotFoundException, IOException {
-        FileUtil.saveStringsToFile(content, this.path);
+        FileUtil.saveStringsToFile(content, defaultPath);
     }
 }
 
