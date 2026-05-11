@@ -19,6 +19,8 @@ public class GrandmasGardenUI extends JFrame implements Playable {
     private JLabel messageLabel;
     private MapSquare[][] squares;
     private ImageIcon soilIcon;
+    private ImageIcon roadIcon;
+    private ImageIcon shopIcon;
     private ImageIcon rockIcon;
     private ImageIcon playerIcon;
     private ImageIcon[] plantIcons;
@@ -87,7 +89,9 @@ public class GrandmasGardenUI extends JFrame implements Playable {
     }
 
     public void drawShop() {
-
+        ShopWindow shopUI = new ShopWindow(this, gameManager);
+        shopUI.open();
+        draw();
     }
 
     private void bindMovementKeys(){
@@ -95,6 +99,20 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         bindMovementKey("A", 'a');
         bindMovementKey("S", 's');
         bindMovementKey("D", 'd');
+
+
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("E"), "E");
+        getRootPane().getActionMap().put("E", new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent event) {
+                try {
+                    gameManager.enterShop();
+                    drawShop();
+                } catch(GameActionException exception){
+                    gameManager.setMessage(exception.getMessage());
+                    draw();
+                }
+            }
+        });
     }
 
     private void bindMovementKey(String key, char direction){
@@ -131,13 +149,20 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         if(type == TerrainType.SOIL){
             return soilIcon;
         }
-
-        return rockIcon;
+        if(type == TerrainType.ROCK){
+            return rockIcon;
+        }
+        if(type == TerrainType.SHOP){
+            return shopIcon;
+        }
+        return roadIcon;
     }
 
     private void loadImages(){
         soilIcon = loadIcon("/aua/images/muddy_ground.jpg");
-        rockIcon = loadIcon("/aua/images/Ground_Diffuse.jpg");
+        roadIcon = loadIcon("/aua/images/Ground_Diffuse.jpg");
+        rockIcon =loadIcon("/aua/images/LongLeaves_S.jpg");
+        shopIcon= loadIcon("/aua/images/shop.png");
         playerIcon = loadIcon("/aua/images/farmera1.jpg");
 
         for(int i = 0; i<PLANT_GROWTH_STAGES; i++){

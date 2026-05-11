@@ -2,7 +2,7 @@ package aua.core;
 
 public class Inventory {
 
-    private static final int DEFAULT_CAPACITY = 20;
+    private static final int DEFAULT_CAPACITY = 10;
     private Item[] items;
     private int size;
     private int selectedIndex;
