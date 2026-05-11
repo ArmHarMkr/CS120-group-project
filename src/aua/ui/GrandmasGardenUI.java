@@ -12,6 +12,7 @@ import java.net.URL;
 
 public class GrandmasGardenUI extends JFrame implements Playable {
     private static final int TILE_SIZE = 40;
+    private final int PLANT_GROWTH_STAGES = 10;
 
     private GameManager gameManager;
     private JPanel mapPanel;
@@ -20,11 +21,12 @@ public class GrandmasGardenUI extends JFrame implements Playable {
     private ImageIcon soilIcon;
     private ImageIcon rockIcon;
     private ImageIcon playerIcon;
-    private ImageIcon plantIcon;
+    private ImageIcon[] plantIcons;
     private ImageIcon maturePlantIcon;
 
     public GrandmasGardenUI(GameManager gameManager){
         this.gameManager = gameManager;
+        this.plantIcons = new ImageIcon[PLANT_GROWTH_STAGES];
         loadImages();
         setTitle("Grandma's Garden");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -118,9 +120,11 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         if(gameManager.hasPlantAt(x, y)){
             if(gameManager.isMaturePlantAt(x, y)){
                 return maturePlantIcon;
-            }
+            } else {
+                int growthRatio = gameManager.getGrowthRatioAt(x,y);
 
-            return plantIcon;
+                return this.plantIcons[growthRatio];
+            }
         }
 
         TerrainType type = gameManager.getTerrainTypeAt(x, y);
@@ -135,7 +139,12 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         soilIcon = loadIcon("/aua/images/muddy_ground.jpg");
         rockIcon = loadIcon("/aua/images/Ground_Diffuse.jpg");
         playerIcon = loadIcon("/aua/images/farmera1.png");
-        plantIcon = loadIcon("/aua/images/wild_plant_grow_4.png");
+
+        for(int i = 0; i<PLANT_GROWTH_STAGES; i++){
+            String path = "/aua/images/wild_plant_grow_"+(i+1)+".png";
+            plantIcons[i] = loadIcon(path);
+        }
+
         maturePlantIcon = loadIcon("/aua/images/wild_plant_grow_12.png");
     }
 
