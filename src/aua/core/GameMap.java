@@ -22,7 +22,7 @@ public class GameMap {
                     tiles[i][j] = new Tile(TerrainType.ROCK);
                 } else if(j % 4 == 1 || i % 4 == 1){
                     tiles[i][j] = new Tile(TerrainType.ROAD);
-                } else if((j + i) % 8 == 0){
+                } else if((j + i) % 4 == 0){
                     tiles[i][j] = new Tile(TerrainType.ROAD);
                 } else {
                     tiles[i][j] = new Tile(TerrainType.SOIL);
