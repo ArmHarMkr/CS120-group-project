@@ -1,5 +1,4 @@
 package aua.core;
-
 import aua.utils.StringUtil;
 import aua.core.exceptions.*;
 
@@ -68,6 +67,9 @@ public class GameManager {
         return player.getInventoryItems().length;
     }
 
+    public Item[] getInventoryItems() {
+        return player.getInventoryItems();
+    }
 
     /**
      *
@@ -372,6 +374,9 @@ public class GameManager {
         player.addToInventory(new Plant("Carrot Seed", 4, new Product("Carrot", 0, 2)));
         player.addToInventory(new Plant("Carrot Seed", 4, new Product("Carrot", 0, 2)));
         player.addToInventory(new Plant("Tomato Seed", 6, new Product("Tomato", 0, 3)));
+        player.addToInventory(new Product("Carrot", 35, 2));
+        player.addToInventory(new Product("Tomato", 12, 3));
+        player.addToInventory(new Product("Pumpkin", 22, 7));
     }
 
     /**
@@ -624,11 +629,23 @@ public class GameManager {
         if(!(items[index] instanceof Product)){
             throw new InvalidGameActionException("You can only sell harvest, not seeds.");
         }
+        Product product = (Product) items[index];
         player.selectItem(index);
-        Product product = (Product) player.getSelectedItem();
-        if(!shop.sell(player, product)){
+        Product selected = (Product) player.getSelectedItem();
+        if(!shop.sell(player, selected)){
             throw new InvalidGameActionException("Could not sell the item.");
         }
         message = "You sold " + product.getName() + " for $" + product.getSellPrice() + ".";
     }
+    public int getPlayerMoney() {
+        return player.getMoney();
+    }
+
+    public Item[] getShopItems() {
+        return shop.getProducts();
+    }
+
+
+
+
 }
