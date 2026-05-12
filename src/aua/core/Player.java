@@ -9,11 +9,18 @@ public class Player {
     private Inventory inventory;
     private int money;
 
+    /**
+     *
+     */
     public Player() {
         this.money = DEFAULT_MONEY;
         this.inventory = new Inventory();
     }
 
+    /**
+     *
+     * @param money
+     */
     public Player(int money) {
         if (money < 0) {
             money = DEFAULT_MONEY;}
@@ -21,6 +28,13 @@ public class Player {
         this.inventory = new Inventory();
     }
 
+    /**
+     *
+     * @param playerReconstructableString
+     * @param inventoryReconstructableString
+     * @throws MalformedStringException
+     * @throws NumberFormatException
+     */
     public Player(String playerReconstructableString, String inventoryReconstructableString) throws MalformedStringException, NumberFormatException {
         String[] playerData = StringUtil.parseDelimitedString(playerReconstructableString);
         if(playerData[0].equals("PLAYER")){
@@ -53,42 +67,86 @@ public class Player {
 
     }
 
+    /**
+     *
+     * @param item
+     * @return
+     */
     public boolean addToInventory(Item item) {
         return inventory.addItem(item);
     }
 
+    /**
+     *
+     * @param item
+     * @return
+     */
     public boolean removeFromInventory(Item item) {
         return inventory.removeItem(item);
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isInventoryFull() {
         return inventory.isFull();
     }
 
+    /**
+     *
+     * @return
+     */
     public int getMoney() {
         return money;
     }
 
+    /**
+     *
+     * @return
+     */
     public Item[] getInventoryItems() {
         return inventory.getItems();
     }
 
+    /**
+     *
+     * @return
+     */
     public int getSelectedInventoryIndex() {
         return inventory.getSelectedIndex();
     }
 
+    /**
+     *
+     * @param index
+     * @return
+     */
     public boolean selectItem(int index) {
         return inventory.selectItem(index);
     }
 
+    /**
+     *
+     * @return
+     */
     public Item getSelectedItem() {
         return inventory.getSelectedItem();
     }
 
+    /**
+     *
+     * @return
+     */
     public Item takeSelectedItem() {
         return inventory.removeSelectedItem();
     }
 
+    /**
+     *
+     * @param amount
+     * @return
+     */
     public boolean spendMoney(int amount) {
         if (amount <= 0 || money < amount) {
             return false;
@@ -97,12 +155,21 @@ public class Player {
         return true;
     }
 
+    /**
+     *
+     * @param amount
+     */
     public void addMoney(int amount) {
         if (amount > 0) {
             money += amount;
         }
     }
 
+    /**
+     *
+     * @param tile
+     * @return
+     */
     public Product harvest(Tile tile){
         return null;
     }
