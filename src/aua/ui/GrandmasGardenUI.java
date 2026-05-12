@@ -25,6 +25,12 @@ public class GrandmasGardenUI extends JFrame implements Playable {
     private ImageIcon playerIcon;
     private ImageIcon[] plantIcons;
     private ImageIcon maturePlantIcon;
+    private enum ActionMode {
+        NONE,
+        PLANTING,
+        HARVESTING
+    }
+    private ActionMode actionMode = ActionMode.NONE;
 
     public GrandmasGardenUI(GameManager gameManager){
         this.gameManager = gameManager;
@@ -39,7 +45,11 @@ public class GrandmasGardenUI extends JFrame implements Playable {
 
         for(int i = 0; i < gameManager.getMapHeight(); i++){
             for(int j = 0; j < gameManager.getMapWidth(); j++){
+                final int y = i;
+                final int x = j;
+
                 squares[i][j] = new MapSquare();
+                squares[i][j].addActionListener(e -> handleTileClick(x, y));
                 mapPanel.add(squares[i][j]);
             }
         }
@@ -111,6 +121,23 @@ public class GrandmasGardenUI extends JFrame implements Playable {
                     gameManager.setMessage(exception.getMessage());
                     draw();
                 }
+            }
+        });
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("P"), "P");
+        getRootPane().getActionMap().put("P", new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent event) {
+                actionMode = ActionMode.PLANTING;
+                gameManager.setMessage("Choose a highlighted soil tile to plant.");
+                draw();
+            }
+        });
+
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("H"), "H");
+        getRootPane().getActionMap().put("H", new AbstractAction() {
+            public void actionPerformed(java.awt.event.ActionEvent event) {
+                actionMode = ActionMode.HARVESTING;
+                gameManager.setMessage("Choose a highlighted mature plant to harvest.");
+                draw();
             }
         });
     }
@@ -196,5 +223,90 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         graphics.dispose();
 
         return new ImageIcon(image);
+    }
+    private void handleTileClick(int x, int y){
+        if(actionMode == ActionMode.NONE){
+            return;
+        }
+
+        char direction = getDirectionToTile(x, y);
+
+        if(direction == ' '){
+            gameManager.setMessage("Choose a tile next to the player.");
+            draw();
+            return;
+        }
+
+        try {
+            if(actionMode == ActionMode.PLANTING){
+                gameManager.plant(direction);
+            } else if(actionMode == ActionMode.HARVESTING){
+                gameManager.collect(direction);
+            }
+
+            actionMode = ActionMode.NONE;
+        } catch(GameActionException exception){
+            gameManager.setMessage(exception.getMessage());
+        }
+
+        draw();
+    }
+
+    private char getDirectionToTile(int x, int y){
+        int dx = x - gameManager.getPlayerX();
+        int dy = y - gameManager.getPlayerY();
+
+        if(dx == -1 && dy == -1) return 'q';
+        if(dx == 0 && dy == -1) return 'w';
+        if(dx == 1 && dy == -1) return 'e';
+        if(dx == -1 && dy == 0) return 'a';
+        if(dx == 1 && dy == 0) return 'd';
+        if(dx == -1 && dy == 1) return 'z';
+        if(dx == 0 && dy == 1) return 's';
+        if(dx == 1 && dy == 1) return 'c';
+
+        return ' ';
+    }
+
+    private void updateHighlights(){
+        for(int y = 0; y < gameManager.getMapHeight(); y++){
+            for(int x = 0; x < gameManager.getMapWidth(); x++){
+                squares[y][x].setHighlighted(false, Color.YELLOW);
+            }
+        }
+
+        if(actionMode == ActionMode.NONE){
+            return;
+        }
+
+        int playerX = gameManager.getPlayerX();
+        int playerY = gameManager.getPlayerY();
+
+        for(int dy = -1; dy <= 1; dy++){
+            for(int dx = -1; dx <= 1; dx++){
+                if(dx == 0 && dy == 0){
+                    continue;
+                }
+
+                int x = playerX + dx;
+                int y = playerY + dy;
+
+                if(x < 0 || x >= gameManager.getMapWidth() || y < 0 || y >= gameManager.getMapHeight()){
+                    continue;
+                }
+
+                if(actionMode == ActionMode.PLANTING){
+                    if(gameManager.getTerrainTypeAt(x, y) == TerrainType.SOIL && !gameManager.hasPlantAt(x, y)){
+                        squares[y][x].setHighlighted(true, Color.GREEN);
+                    }
+                }
+
+                if(actionMode == ActionMode.HARVESTING){
+                    if(gameManager.isMaturePlantAt(x, y)){
+                        squares[y][x].setHighlighted(true, Color.ORANGE);
+                    }
+                }
+            }
+        }
     }
 }

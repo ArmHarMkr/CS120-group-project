@@ -361,6 +361,14 @@ public class GameManager {
         double growthPeriod = plant.getGrowthPeriod();
         double currentGrowthPeriod = plant.getCurrentGrowth();
         int growthRatio = (int)(currentGrowthPeriod/growthPeriod*10);
+
+        if(growthRatio < 0){
+            growthRatio = 0;
+        }
+
+        if(growthRatio > 10){
+            growthRatio = 10;
+        }
         return growthRatio;
     }
 

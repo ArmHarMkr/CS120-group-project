@@ -15,6 +15,15 @@ public class MapSquare extends JButton {
         setContentAreaFilled(false);
         setMargin(new Insets(0, 0, 0, 0));
     }
+    public void setHighlighted(boolean highlighted, Color color){
+        setBorderPainted(highlighted);
+
+        if(highlighted){
+            setBorder(BorderFactory.createLineBorder(color, 3));
+        } else {
+            setBorder(null);
+        }
+    }
 
     public void setSquareIcon(ImageIcon icon){
         setIcon(icon);
