@@ -2,6 +2,13 @@ package aua.utils;
 import java.io.*;
 
 public class FileUtil {
+    /**
+     *
+     * @param content
+     * @param path
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public static void saveStringsToFile(String[] content, String path) throws FileNotFoundException, IOException {
         PrintWriter outputStream = null;
 
@@ -14,6 +21,13 @@ public class FileUtil {
         outputStream.close();
     }
 
+    /**
+     *
+     * @param path
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
     public static String[] loadStringsFromFile(String path) throws FileNotFoundException,IOException {
         // Partially filled array
         String[] loadedData = new String[Short.MAX_VALUE];

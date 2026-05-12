@@ -19,6 +19,9 @@ public class GameManager {
     private boolean inShop;
     private Shop shop;
 
+    /**
+     * @param storedGame
+     */
     public GameManager(String[] storedGame){
         this();
     }
@@ -35,7 +38,9 @@ public class GameManager {
         addProductToShop();
     }
 
-
+    /**
+     *
+     */
     private void addProductToShop(){
         shop.addProduct(new Plant("Carrot Seed",     4,  new Product("Carrot",      35, 2)));
         shop.addProduct(new Plant("Tomato Seed",     6,  new Product("Tomato",      12, 3)));
@@ -47,16 +52,30 @@ public class GameManager {
         shop.addProduct(new Plant("Sunflower Seed",  5,  new Product("Sunflower",   3, 3)));
     }
 
+    /**
+     *
+     * @return
+     */
     public int getShopSize(){
         return shop.getSize();
     }
 
+    /**
+     *
+     * @return
+     */
     public int getInventorySize(){
         return player.getInventoryItems().length;
     }
 
 
-
+    /**
+     *
+     * @return
+     * @throws IOException
+     * @throws MalformedStringException
+     * @throws NumberFormatException
+     */
     public static GameManager load() throws IOException, MalformedStringException, NumberFormatException {
         GameManager reconstructedGameManager = new GameManager();
 
@@ -103,6 +122,12 @@ public class GameManager {
         return reconstructedGameManager;
     }
 
+    /**
+     *
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws CloneNotSupportedException
+     */
     public void save() throws FileNotFoundException, IOException, CloneNotSupportedException {
         String delimiter = StringUtil.defaultDelimiter;
         String separator = StringUtil.separator;
@@ -147,11 +172,19 @@ public class GameManager {
         storageManager.save(dataStringsArray);
     }
 
+    /**
+     *
+     */
     public void quit(){
         isRunning = false;
         message = "Thanks for playing.";
     }
 
+    /**
+     *
+     * @param input
+     * @throws GameActionException
+     */
     public void handleMovement(char input) throws GameActionException {
         input = Character.toLowerCase(input);
         int nextX = playerPosition.getX();
@@ -173,6 +206,11 @@ public class GameManager {
         movePlayer(nextX, nextY);
     }
 
+    /**
+     *
+     * @param index
+     * @throws GameActionException
+     */
     public void selectInventoryItem(int index) throws GameActionException {
         if(player.selectItem(index)){
             Item selectedItem = player.getSelectedItem();
@@ -183,6 +221,11 @@ public class GameManager {
         }
     }
 
+    /**
+     *
+     * @param direction
+     * @throws GameActionException
+     */
     public void plant(char direction) throws GameActionException {
         Item selectedItem = player.getSelectedItem();
 
@@ -210,6 +253,11 @@ public class GameManager {
         }
     }
 
+    /**
+     *
+     * @param direction
+     * @throws GameActionException
+     */
     public void collect(char direction) throws GameActionException {
         direction = Character.toLowerCase(direction);
 
@@ -232,6 +280,11 @@ public class GameManager {
         message = "Collected " + product.getName() + ".";
     }
 
+    /**
+     *
+     * @param direction
+     * @return
+     */
     private Point getTargetPoint(char direction){
         int targetX = playerPosition.getX();
         int targetY = playerPosition.getY();
@@ -263,6 +316,9 @@ public class GameManager {
         return new Point(targetX, targetY);
     }
 
+    /**
+     *
+     */
     public void tickAll(){
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
@@ -276,6 +332,12 @@ public class GameManager {
         }
     }
 
+    /**
+     *
+     * @param nextX
+     * @param nextY
+     * @throws GameActionException
+     */
     private void movePlayer(int nextX, int nextY) throws GameActionException {
         if(map.isWalkable(nextX, nextY)){
             playerPosition.setX(nextX);
@@ -287,7 +349,10 @@ public class GameManager {
         }
     }
 
-
+    /**
+     *
+     * @return
+     */
     private Point findStartingPosition(){
         for(int i = 0; i < map.getHeight(); i++){
             for(int j = 0; j < map.getWidth(); j++){
@@ -300,44 +365,89 @@ public class GameManager {
         return new Point();
     }
 
+    /**
+     *
+     */
     private void addStartingPlants(){
         player.addToInventory(new Plant("Carrot Seed", 4, new Product("Carrot", 0, 2)));
         player.addToInventory(new Plant("Carrot Seed", 4, new Product("Carrot", 0, 2)));
         player.addToInventory(new Plant("Tomato Seed", 6, new Product("Tomato", 0, 3)));
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isRunning(){
         return isRunning;
     }
 
+    /**
+     *
+     * @return
+     */
     public String drawMap(){
         return map.draw(playerPosition.getX(), playerPosition.getY());
     }
 
+    /**
+     *
+     * @return
+     */
     public int getMapWidth(){
         return map.getWidth();
     }
 
+    /**
+     *
+     * @return
+     */
     public int getMapHeight(){
         return map.getHeight();
     }
 
+    /**
+     *
+     * @return
+     */
     public int getPlayerX(){
         return playerPosition.getX();
     }
 
+    /**
+     *
+     * @return
+     */
     public int getPlayerY(){
         return playerPosition.getY();
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public TerrainType getTerrainTypeAt(int x, int y){
         return map.getTile(x, y).getType();
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean hasPlantAt(int x, int y){
         return map.getTile(x, y).getObject() instanceof Plant;
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean isMaturePlantAt(int x, int y){
         if(!(map.getTile(x, y).getObject() instanceof Plant)){
             return false;
@@ -347,6 +457,12 @@ public class GameManager {
         return plant.isReady();
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public int getGrowthRatioAt(int x, int y){
         if(!hasPlantAt(x,y)){
             return -1;
@@ -359,14 +475,26 @@ public class GameManager {
         return growthRatio;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getMessage(){
         return message;
     }
 
+    /**
+     *
+     * @param message
+     */
     public void setMessage(String message){
         this.message = message;
     }
 
+    /**
+     *
+     * @return
+     */
     public String drawInventory(){
         Item[] items = player.getInventoryItems();
         String inventoryText = "Inventory: ";
@@ -386,10 +514,18 @@ public class GameManager {
         return inventoryText;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isInShop(){
         return inShop;
     }
 
+    /**
+     *
+     * @return
+     */
     private boolean isAdjacentToShop(){
         int playerX = playerPosition.getX();
         int playerY = playerPosition.getY();
@@ -409,6 +545,10 @@ public class GameManager {
         return false;
     }
 
+    /**
+     *
+     * @throws GameActionException
+     */
     public void enterShop() throws GameActionException {
         if(!isAdjacentToShop()){
             throw new InvalidGameActionException("You need to be next to the shop.");
@@ -417,11 +557,18 @@ public class GameManager {
         message = "Welcome to the shop!";
     }
 
+    /**
+     *
+     */
     public void exitShop(){
         inShop = false;
         message = "You left the shop.";
     }
 
+    /**
+     *
+     * @return
+     */
     public String drawShop(){
         String screen = "";
         screen += "===== SHOP  =======   \n";
@@ -445,6 +592,11 @@ public class GameManager {
         return screen;
     }
 
+    /**
+     *
+     * @param index
+     * @throws GameActionException
+     */
     public void buyItem(int index) throws GameActionException {
         Item[] items = shop.getProducts();
         if(index < 0 || index >= items.length){
@@ -459,6 +611,11 @@ public class GameManager {
         message = " You bought " + items[index].getName() + " for $" + items[index].getBuyPrice() + ".";
     }
 
+    /**
+     *
+     * @param index
+     * @throws GameActionException
+     */
     public void sellItem(int index) throws GameActionException {
         Item[] items = player.getInventoryItems();
         if(index < 0 || index >= items.length){
@@ -474,8 +631,4 @@ public class GameManager {
         }
         message = "You sold " + product.getName() + " for $" + product.getSellPrice() + ".";
     }
-
-
-
-
 }

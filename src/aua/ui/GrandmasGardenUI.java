@@ -24,6 +24,9 @@ public class GrandmasGardenUI extends JFrame implements Playable {
     private ImageIcon[] plantIcons;
     private ImageIcon maturePlantIcon;
 
+    /**
+     * @param gameManager
+     */
     public GrandmasGardenUI(GameManager gameManager){
         this.gameManager = gameManager;
         this.plantIcons = new ImageIcon[PLANT_GROWTH_STAGES];
@@ -53,19 +56,31 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         setLocationRelativeTo(null);
     }
 
+    /**
+     *
+     */
     public void start() {
         setVisible(true);
         mapPanel.requestFocusInWindow();
     }
 
+    /**
+     *
+     */
     public void save() {
-
+        //TODO
     }
 
+    /**
+     *
+     */
     public void load(){
-
+        //TODO
     }
 
+    /**
+     *
+     */
     public void draw() {
         for(int i = 0; i < gameManager.getMapHeight(); i++){
             for(int j = 0; j < gameManager.getMapWidth(); j++){
@@ -77,19 +92,32 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         repaint();
     }
 
-
+    /**
+     *
+     * @throws GameActionException
+     */
     public void handlePlanting() throws GameActionException {
 
     }
 
+    /**
+     *
+     * @throws GameActionException
+     */
     public void handleCollecting() throws GameActionException {
 
     }
 
+    /**
+     *
+     */
     public void drawShop() {
 
     }
 
+    /**
+     *
+     */
     private void bindMovementKeys(){
         bindMovementKey("W", 'w');
         bindMovementKey("A", 'a');
@@ -97,6 +125,11 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         bindMovementKey("D", 'd');
     }
 
+    /**
+     *
+     * @param key
+     * @param direction
+     */
     private void bindMovementKey(String key, char direction){
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(key), key);
         getRootPane().getActionMap().put(key, new AbstractAction() {
@@ -112,6 +145,12 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         });
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     private ImageIcon getIconFor(int x, int y){
         if(x == gameManager.getPlayerX() && y == gameManager.getPlayerY()){
             return playerIcon;
@@ -135,6 +174,9 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         return rockIcon;
     }
 
+    /**
+     *
+     */
     private void loadImages(){
         soilIcon = loadIcon("/aua/images/muddy_ground.jpg");
         rockIcon = loadIcon("/aua/images/Ground_Diffuse.jpg");
@@ -148,6 +190,11 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         maturePlantIcon = loadIcon("/aua/images/wild_plant_grow_12.png");
     }
 
+    /**
+     *
+     * @param path
+     * @return
+     */
     private ImageIcon loadIcon(String path){
         URL imageUrl = getClass().getResource(path);
         if(imageUrl == null){
@@ -159,6 +206,11 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         return new ImageIcon(scaledImage);
     }
 
+    /**
+     *
+     * @param color
+     * @return
+     */
     private ImageIcon createFallbackIcon(Color color){
         BufferedImage image = new BufferedImage(
                 TILE_SIZE,

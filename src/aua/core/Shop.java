@@ -8,10 +8,18 @@ public class Shop {
 
     private Item[] products;
     private int size;
+
+    /**
+     *
+     */
     public Shop() {
         this(DEFAULT_CAPACITY);
     }
 
+    /**
+     *
+     * @param capacity
+     */
     public Shop(int capacity) {
         if (capacity <= 0) {
             capacity = DEFAULT_CAPACITY;
@@ -20,6 +28,10 @@ public class Shop {
         this.size = 0;
     }
 
+    /**
+     *
+     * @param reconstructableString
+     */
     public Shop(String reconstructableString){
         this();
 
@@ -39,6 +51,11 @@ public class Shop {
         }
     }
 
+    /**
+     *
+     * @param product
+     * @return
+     */
     public boolean addProduct(Item product) {
         if (product == null || isFull()) {
             return false;
@@ -48,6 +65,12 @@ public class Shop {
         return true;
     }
 
+    /**
+     *
+     * @param player
+     * @param item
+     * @return
+     */
     public boolean buy(Player player, Item item) {
         if (player == null || item == null) {
             return false;
@@ -64,6 +87,12 @@ public class Shop {
         return player.addToInventory(item);
     }
 
+    /**
+     *
+     * @param player
+     * @param product
+     * @return
+     */
     public boolean sell(Player player, Product product) {
         if (player == null || product == null) {
             return false;
@@ -75,6 +104,11 @@ public class Shop {
         return true;
     }
 
+    /**
+     *
+     * @param product
+     * @return
+     */
     public boolean contains(Item product) {
         for (int i = 0; i < size; i++) {
             if (products[i] == product) {
@@ -85,6 +119,10 @@ public class Shop {
         return false;
     }
 
+    /**
+     *
+     * @return
+     */
     public Item[] getProducts() {
         Item[] copy = new Item[size];
         for (int i = 0; i < size; i++) {
@@ -93,14 +131,26 @@ public class Shop {
         return copy;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isFull() {
         return size == products.length;
     }
 
+    /**
+     *
+     * @return
+     */
     public String toString(){
         String shopString = "SHOP"+StringUtil.defaultDelimiter;
 

@@ -6,6 +6,9 @@ import java.awt.*;
 public class MapSquare extends JButton {
     private static final int SIZE = 40;
 
+    /**
+     *
+     */
     public MapSquare(){
         setPreferredSize(new Dimension(SIZE, SIZE));
         setMinimumSize(new Dimension(SIZE, SIZE));
@@ -16,6 +19,10 @@ public class MapSquare extends JButton {
         setMargin(new Insets(0, 0, 0, 0));
     }
 
+    /**
+     *
+     * @param icon
+     */
     public void setSquareIcon(ImageIcon icon){
         setIcon(icon);
     }

@@ -11,6 +11,9 @@ public class Inventory {
         this(DEFAULT_CAPACITY);
     }
 
+    /**
+     * @param capacity
+     */
     public Inventory(int capacity) {
         if (capacity <= 0) {capacity = DEFAULT_CAPACITY;}
         this.items = new Item[capacity];
@@ -18,6 +21,10 @@ public class Inventory {
         this.selectedIndex = -1;
     }
 
+    /**
+     * @param item
+     * @return
+     */
     public boolean addItem(Item item) {
         if (item == null || isFull()) {return false;}
         items[size] = item;
@@ -26,6 +33,11 @@ public class Inventory {
         return true;
     }
 
+    /**
+     *
+     * @param index
+     * @return
+     */
     public boolean selectItem(int index) {
         if (index < 0 || index >= size) {
             return false;
@@ -34,6 +46,10 @@ public class Inventory {
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     public Item getSelectedItem() {
         if (selectedIndex == -1) {
             return null;
@@ -41,6 +57,10 @@ public class Inventory {
         return items[selectedIndex];
     }
 
+    /**
+     *
+     * @return
+     */
     public Item removeSelectedItem() {
         if (selectedIndex == -1) {
             return null;
@@ -59,6 +79,11 @@ public class Inventory {
         return removedItem;
     }
 
+    /**
+     *
+     * @param item
+     * @return
+     */
     public boolean removeItem(Item item) {
         if (item == null) {
             return false;
@@ -81,6 +106,10 @@ public class Inventory {
         return false;
     }
 
+    /**
+     *
+     * @return
+     */
     public Item[] getItems() {
         WorldObject[] copy = new WorldObject[size];
         for (int i = 0; i < size; i++) {
@@ -88,18 +117,43 @@ public class Inventory {
         }
         return copy;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getSize() {
         return size;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getCapacity() {
         return items.length;
     }
+
+    /**
+     *
+     * @return
+     */
     public int getSelectedIndex() {
         return selectedIndex;
     }
+
+    /**
+     *
+     * @return
+     */
     public boolean isFull() {
         return size == items.length;
     }
+
+    /**
+     *
+     * @return
+     */
     public boolean isEmpty() {
         return size == 0;
     }
