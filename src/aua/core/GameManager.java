@@ -117,7 +117,7 @@ public class GameManager {
 
 
         for (int i = 0; i < inventoryItems.length; i++) {
-            if(inventoryItems[i] instanceof WorldObject){
+            if(inventoryItems[i] instanceof Plant){
                 Plant plant = (Plant) inventoryItems[i];
                 inventoryDataString = inventoryDataString+delimiter+plant;
             } else if(inventoryItems[i] instanceof Product) {
