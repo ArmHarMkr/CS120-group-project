@@ -4,10 +4,21 @@ public class StringUtil {
     public static final String defaultDelimiter = "%%";
     public static final String separator = "-";
 
+    /**
+     *
+     * @param value
+     * @return
+     */
     public static String[] parseDelimitedString(String value){
         return parseDelimitedString(value, defaultDelimiter);
     }
 
+    /**
+     *
+     * @param value
+     * @param delimiter
+     * @return
+     */
     public static String[] parseDelimitedString(String value, String delimiter){
         String[] reconstructedData = new String[Short.MAX_VALUE];
         int reconstructedDataIndex = 0;

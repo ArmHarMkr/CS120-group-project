@@ -11,6 +11,11 @@ public class GameMap {
     private int width;
     private int height;
 
+    /**
+     *
+     * @param width
+     * @param height
+     */
     public GameMap(int width, int height){
         this.width = width;
         this.height = height;
@@ -32,6 +37,12 @@ public class GameMap {
         tiles[SHOPX][SHOPY] = new Tile(TerrainType.SHOP);
     }
 
+    /**
+     *
+     * @param metadata
+     * @param reconstructableStrings
+     * @throws NumberFormatException
+     */
     public GameMap(String metadata, String[] reconstructableStrings) throws NumberFormatException {
         String[] parsedMetadata = StringUtil.parseDelimitedString(metadata);
 
@@ -79,26 +90,63 @@ public class GameMap {
         }
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public Tile getTile(int x, int y){
         return tiles[y][x];
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean isInside(int x, int y){
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean isWalkable(int x, int y){
         return isInside(x, y) && tiles[y][x].isWalkable();
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean isShop(int x, int y){
         return isInside(x, y) && tiles[y][x].getType() == TerrainType.SHOP;
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param object
+     * @return
+     */
     public boolean placeObject(int x, int y, WorldObject object){
         return isInside(x, y) && tiles[y][x].place(object);
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     public Product collectPlant(int x, int y){
         if(!isInside(x, y)){
             return null;
@@ -119,14 +167,28 @@ public class GameMap {
         return product;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getWidth(){
         return width;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getHeight(){
         return height;
     }
 
+    /**
+     *
+     * @param playerX
+     * @param playerY
+     * @return
+     */
     public String draw(int playerX, int playerY){
         String mapText = "";
 
@@ -158,10 +220,18 @@ public class GameMap {
         return mapText;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getMapMetadata(){
         return "GAMEMAP"+StringUtil.defaultDelimiter+this.width+StringUtil.separator+this.height;
     }
 
+    /**
+     *
+     * @return
+     */
     public String[] getMapEncoding(){
         String[] mapEncoding = new String[this.height];
 

@@ -15,11 +15,18 @@ public class GrandmasGardenConsole implements Playable {
     private GameManager gameManager;
     private Scanner scanner;
 
+    /**
+     *
+     * @param gameManager
+     */
     public GrandmasGardenConsole(GameManager gameManager){
         this.gameManager = gameManager;
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     *
+     */
     public void start(){
         while(gameManager.isRunning()){
             if(gameManager.isInShop()){
@@ -43,6 +50,9 @@ public class GrandmasGardenConsole implements Playable {
         System.out.println(gameManager.getMessage());
     }
 
+    /**
+     *
+     */
     public void load(){
         try{
             this.gameManager = GameManager.load();
@@ -52,6 +62,9 @@ public class GrandmasGardenConsole implements Playable {
         }
     }
 
+    /**
+     *
+     */
     public void save(){
         try{
             this.gameManager.save();
@@ -64,6 +77,9 @@ public class GrandmasGardenConsole implements Playable {
             System.out.println(e.getMessage());
         }}
 
+    /**
+     *
+     */
     public void draw(){
         System.out.println(gameManager.drawMap());
         System.out.println("@ player, . road, , soil, # rock, P plant, M mature plant and S is a shop");
@@ -72,6 +88,10 @@ public class GrandmasGardenConsole implements Playable {
         System.out.println(gameManager.getMessage());
     }
 
+    /**
+     *
+     * @param command
+     */
     private void handleCommand(String command){
         if(command == null || command.isEmpty()){
             return;
@@ -150,6 +170,10 @@ public class GrandmasGardenConsole implements Playable {
         }
     }
 
+    /**
+     *
+     * @throws GameActionException
+     */
     public void handlePlanting() throws GameActionException {
         System.out.println("Planting uses the currently selected seed.");
         System.out.println(gameManager.drawInventory());
@@ -168,6 +192,10 @@ public class GrandmasGardenConsole implements Playable {
         }
     }
 
+    /**
+     *
+     * @throws GameActionException
+     */
     public void handleCollecting() throws GameActionException {
         System.out.print("Harvest direction (Q/W/E/A/S/D/Z/C): ");
 
@@ -192,11 +220,18 @@ public class GrandmasGardenConsole implements Playable {
         }
     }
 
+    /**
+     *
+     */
     public void drawShop(){
         System.out.println(gameManager.drawShop());
         System.out.println(gameManager.getMessage());
     }
 
+    /**
+     *
+     * @param command
+     */
     private void handleShopCommand(String command){
         if(command == null || command.isEmpty()){
             return;
@@ -225,6 +260,4 @@ public class GrandmasGardenConsole implements Playable {
             gameManager.setMessage(exception.getMessage());
         }
     }
-
-
 }
