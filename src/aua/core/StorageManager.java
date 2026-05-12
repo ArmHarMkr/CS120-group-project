@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class StorageManager {
-    static final String defaultPath = "/Users/surenpoghosyan/CS120-group-project/src/data.txt";
+    static final String defaultPath = "data.txt";
 
     /**
      *

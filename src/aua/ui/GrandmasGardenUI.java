@@ -7,10 +7,15 @@ import aua.core.Plant;
 import aua.core.Product;
 import aua.core.TerrainType;
 import aua.core.exceptions.GameActionException;
+import aua.core.exceptions.MalformedStringException;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 
 public class GrandmasGardenUI extends JFrame implements Playable {
@@ -21,6 +26,7 @@ public class GrandmasGardenUI extends JFrame implements Playable {
     private JPanel mapPanel;
     private JPanel inventoryPanel;
     private JLabel messageLabel;
+    private JPanel toolbarPanel;
     private DefaultListModel<String> inventoryModel;
     private JList<String> inventoryList;
     private MapSquare[][] squares;
@@ -68,9 +74,12 @@ public class GrandmasGardenUI extends JFrame implements Playable {
 
         inventoryPanel = createInventoryPanel();
 
+        toolbarPanel = createToolbarPanel();
+
         add(mapPanel, BorderLayout.CENTER);
         add(inventoryPanel, BorderLayout.EAST);
         add(messageLabel, BorderLayout.SOUTH);
+        add(toolbarPanel, BorderLayout.NORTH);
         bindMovementKeys();
         draw();
         pack();
@@ -89,14 +98,30 @@ public class GrandmasGardenUI extends JFrame implements Playable {
      *
      */
     public void save() {
-        //TODO
+        try{
+            this.gameManager.save();
+            JOptionPane.showMessageDialog(this, "GAME SAVED SUCCESSFULLY!");
+        }catch (FileNotFoundException e){
+            JOptionPane.showMessageDialog(this, "File Not found: "+e.getMessage());
+        } catch (Exception e){
+            JOptionPane.showMessageDialog(this, "Error: "+e.getMessage());
+        }
     }
 
     /**
      *
      */
     public void load(){
-        //TODO
+        try{
+            this.gameManager = GameManager.load();
+            JOptionPane.showMessageDialog(this, "GAME LOADED SUCCESSFULLY!");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error: "+e.getMessage());
+        } catch (MalformedStringException e) {
+            JOptionPane.showMessageDialog(this, "The provided string is not legal: "+e.getMessage());
+        } catch (NumberFormatException e){
+            JOptionPane.showMessageDialog(this, "Oops, there was some issue with the code, please try again in 2 years: "+e.getMessage());
+        }
     }
 
     /**
@@ -269,6 +294,34 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         return new ImageIcon(scaledImage);
     }
 
+    private JPanel createToolbarPanel(){
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 6));
+
+        JButton saveButton = new JButton("Save");
+        JButton loadButton = new JButton("Load");
+
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                save();
+                draw();
+            }
+        });
+
+        loadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                load();
+                draw();
+            }
+        });
+
+        panel.add(saveButton);
+        panel.add(loadButton);
+
+        return panel;
+    }
+
     /**
      *
      * @param color
@@ -352,6 +405,11 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         draw();
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     */
     private void handleTileClick(int x, int y){
         if(actionMode == ActionMode.NONE){
             return;
@@ -380,6 +438,12 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         draw();
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
     private char getDirectionToTile(int x, int y){
         int dx = x - gameManager.getPlayerX();
         int dy = y - gameManager.getPlayerY();
