@@ -15,3 +15,4 @@ https://www.google.com/search?sca_esv=cd484e7c15276350&sxsrf=ANbL-n7awIvf21kWVy0
 [ui] shop icon -https://www.vecteezy.com/vector-art/60517225-pixel-art-fruit-shop-front-with-fresh-produce-and-plants
 https://docs.oracle.com/javase/tutorial/uiswing/events/keylistener.html
 https://docs.oracle.com/javase/tutorial/uiswing/misc/keybinding.html
+https://docs.oracle.com/en/java/javase/26/docs/api/java.desktop/javax/swing/text/class-use/Highlighter.html
