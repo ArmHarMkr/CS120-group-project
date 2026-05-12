@@ -5,6 +5,8 @@ import aua.core.exceptions.MalformedStringException;
 
 public class GameMap {
     private final int SHOPX = 1;
+    private final int SHOPY = 3;
+
     private Tile[][] tiles;
     private int width;
     private int height;
@@ -20,14 +22,14 @@ public class GameMap {
                     tiles[i][j] = new Tile(TerrainType.ROCK);
                 } else if(j % 4 == 1 || i % 4 == 1){
                     tiles[i][j] = new Tile(TerrainType.ROAD);
-                } else if((j + i) % 8 == 0){
-                    tiles[i][j] = new Tile(TerrainType.ROCK);
+                } else if((j + i) % 4 == 0){
+                    tiles[i][j] = new Tile(TerrainType.ROAD);
                 } else {
                     tiles[i][j] = new Tile(TerrainType.SOIL);
                 }
             }
         }
-        tiles[SHOPX][3] = new Tile(TerrainType.SHOP);
+        tiles[SHOPX][SHOPY] = new Tile(TerrainType.SHOP);
     }
 
     public GameMap(String metadata, String[] reconstructableStrings) throws NumberFormatException {
