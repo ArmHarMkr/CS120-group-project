@@ -12,6 +12,8 @@ UI
     Walking on the map - Harutyun
     Plant growing on the map - Suren
     Shop visual selling and buying - Sofi
+    Inventory - Harutyun
+    Planting and harvesting - Sofi, Harutyun
 
 
 Game Management

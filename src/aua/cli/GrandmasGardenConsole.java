@@ -1,10 +1,11 @@
 package aua.cli;
 
 import aua.core.GameManager;
+import aua.core.Item;
+import aua.core.Plant;
+import aua.core.Product;
 import aua.core.Playable;
-import aua.core.StorageManager;
 import aua.core.exceptions.GameActionException;
-import aua.utils.FileUtil;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -66,7 +67,7 @@ public class GrandmasGardenConsole implements Playable {
     public void draw(){
         System.out.println(gameManager.drawMap());
         System.out.println("@ player, . road, , soil, # rock, P plant, M mature plant and S is a shop");
-        System.out.println("W/A/S/D move | P plant | H collect | 1-9 select item | Q quit| E enter | X exit | L load | K save");
+        System.out.println("W/A/S/D move | I inventory/select | P plant selected seed | H harvest | E shop | L load | K save | Q quit");
         System.out.println(gameManager.drawInventory());
         System.out.println(gameManager.getMessage());
     }
@@ -80,9 +81,11 @@ public class GrandmasGardenConsole implements Playable {
             char input = Character.toLowerCase(command.charAt(0));
 
             if(Character.isDigit(input)){
-                gameManager.selectInventoryItem(Character.getNumericValue(input) - 1);
+                gameManager.selectInventoryItem(parseSlotNumber(command) - 1);
             } else if(input == 'q'){
                 gameManager.quit();
+            } else if(input == 'i'){
+                handleInventorySelection();
             } else if(input == 'p'){
                 handlePlanting();
             } else if(input == 'h'){
@@ -104,7 +107,52 @@ public class GrandmasGardenConsole implements Playable {
         }
     }
 
+    private void handleInventorySelection() throws GameActionException {
+        drawDetailedInventory();
+        System.out.print("Select item number, or press Enter to cancel: ");
+
+        if(!scanner.hasNextLine()){
+            gameManager.quit();
+            return;
+        }
+
+        String line = scanner.nextLine().trim();
+        if(line.isEmpty()){
+            gameManager.setMessage("Inventory selection cancelled.");
+            return;
+        }
+
+        gameManager.selectInventoryItem(parseSlotNumber(line) - 1);
+    }
+
+    private void drawDetailedInventory(){
+        Item[] items = gameManager.getInventoryItems();
+
+        System.out.println();
+        System.out.println("===== INVENTORY =====");
+        if(items.length == 0){
+            System.out.println("empty");
+            return;
+        }
+
+        for(int i = 0; i < items.length; i++){
+            String marker = i == gameManager.getSelectedInventoryIndex() ? " * " : "   ";
+            System.out.print(marker + (i + 1) + ". " + items[i].getName());
+
+            if(items[i] instanceof Plant){
+                System.out.print(" [seed]");
+            } else if(items[i] instanceof Product){
+                Product product = (Product) items[i];
+                System.out.print(" [harvest, sells for $" + product.getSellPrice() + "]");
+            }
+
+            System.out.println();
+        }
+    }
+
     public void handlePlanting() throws GameActionException {
+        System.out.println("Planting uses the currently selected seed.");
+        System.out.println(gameManager.drawInventory());
         System.out.print("Plant direction (Q/W/E/A/S/D/Z/C): ");
 
         if(!scanner.hasNextLine()){
@@ -121,7 +169,7 @@ public class GrandmasGardenConsole implements Playable {
     }
 
     public void handleCollecting() throws GameActionException {
-        System.out.print("Collect direction (Q/W/E/A/S/D/Z/C): ");
+        System.out.print("Harvest direction (Q/W/E/A/S/D/Z/C): ");
 
         if(!scanner.hasNextLine()){
             gameManager.quit();
@@ -133,6 +181,14 @@ public class GrandmasGardenConsole implements Playable {
             gameManager.collect(' ');
         } else {
             gameManager.collect(direction.charAt(0));
+        }
+    }
+
+    private int parseSlotNumber(String input) throws GameActionException {
+        try {
+            return Integer.parseInt(input);
+        } catch(NumberFormatException exception){
+            throw new GameActionException("Please enter a number.");
         }
     }
 
@@ -153,23 +209,13 @@ public class GrandmasGardenConsole implements Playable {
                 System.out.print("Buy which item (1-" + gameManager.getShopSize() + "): ");
                 String line = scanner.nextLine().trim();
                 if(line.isEmpty()) return;
-                char number = line.charAt(0);
-                if(!Character.isDigit(number)){
-                    gameManager.setMessage("Please enter a number.");
-                    return;
-                }
-                gameManager.buyItem(Character.getNumericValue(number) - 1);
+                gameManager.buyItem(parseSlotNumber(line) - 1);
 
             } else if(input == 's'){
                 System.out.print("Sell which item (1-" + gameManager.getInventorySize() + "): ");
                 String line = scanner.nextLine().trim();
                 if(line.isEmpty()) return;
-                char number = line.charAt(0);
-                if(!Character.isDigit(number)){
-                    gameManager.setMessage("Please enter a number.");
-                    return;
-                }
-                gameManager.sellItem(Character.getNumericValue(number) - 1);
+                gameManager.sellItem(parseSlotNumber(line) - 1);
 
             } else {
                 gameManager.setMessage("B = buy | S = sell | X = leave");

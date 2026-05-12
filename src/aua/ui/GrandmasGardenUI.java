@@ -1,7 +1,10 @@
 package aua.ui;
 
 import aua.core.GameManager;
+import aua.core.Item;
 import aua.core.Playable;
+import aua.core.Plant;
+import aua.core.Product;
 import aua.core.TerrainType;
 import aua.core.exceptions.GameActionException;
 
@@ -12,11 +15,14 @@ import java.net.URL;
 
 public class GrandmasGardenUI extends JFrame implements Playable {
     private static final int TILE_SIZE = 40;
-    private final int PLANT_GROWTH_STAGES = 10;
+    private final int PLANT_GROWTH_STAGES = 12;
 
     private GameManager gameManager;
     private JPanel mapPanel;
+    private JPanel inventoryPanel;
     private JLabel messageLabel;
+    private DefaultListModel<String> inventoryModel;
+    private JList<String> inventoryList;
     private MapSquare[][] squares;
     private ImageIcon soilIcon;
     private ImageIcon roadIcon;
@@ -57,7 +63,10 @@ public class GrandmasGardenUI extends JFrame implements Playable {
         messageLabel = new JLabel(gameManager.getMessage());
         messageLabel.setBorder(BorderFactory.createEmptyBorder(8, 10, 8, 10));
 
+        inventoryPanel = createInventoryPanel();
+
         add(mapPanel, BorderLayout.CENTER);
+        add(inventoryPanel, BorderLayout.EAST);
         add(messageLabel, BorderLayout.SOUTH);
         bindMovementKeys();
         draw();
@@ -85,6 +94,8 @@ public class GrandmasGardenUI extends JFrame implements Playable {
             }
         }
 
+        updateHighlights();
+        updateInventoryPanel();
         messageLabel.setText(gameManager.getMessage());
         repaint();
     }
@@ -167,8 +178,8 @@ public class GrandmasGardenUI extends JFrame implements Playable {
                 return maturePlantIcon;
             } else {
                 int growthRatio = gameManager.getGrowthRatioAt(x,y);
-
-                return this.plantIcons[growthRatio];
+                int plantIconIndex = growthRatio * (PLANT_GROWTH_STAGES - 1) / 10;
+                return this.plantIcons[plantIconIndex];
             }
         }
 
@@ -197,7 +208,7 @@ public class GrandmasGardenUI extends JFrame implements Playable {
             plantIcons[i] = loadIcon(path);
         }
 
-        maturePlantIcon = loadIcon("/aua/images/wild_plant_grow_12.png");
+        maturePlantIcon = loadIcon("/aua/images/potato.png");
     }
 
     private ImageIcon loadIcon(String path){
@@ -224,6 +235,71 @@ public class GrandmasGardenUI extends JFrame implements Playable {
 
         return new ImageIcon(image);
     }
+
+    private JPanel createInventoryPanel(){
+        JPanel panel = new JPanel(new BorderLayout(0, 8));
+        panel.setPreferredSize(new Dimension(220, TILE_SIZE * 10));
+        panel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+
+        JLabel title = new JLabel("Inventory");
+        title.setFont(title.getFont().deriveFont(Font.BOLD, 16f));
+
+        inventoryModel = new DefaultListModel<String>();
+        inventoryList = new JList<String>(inventoryModel);
+        inventoryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        JButton selectButton = new JButton("Select");
+        selectButton.addActionListener(event -> selectInventoryItemFromPanel());
+
+        panel.add(title, BorderLayout.NORTH);
+        panel.add(new JScrollPane(inventoryList), BorderLayout.CENTER);
+        panel.add(selectButton, BorderLayout.SOUTH);
+
+        return panel;
+    }
+
+    private void updateInventoryPanel(){
+        inventoryModel.clear();
+        Item[] items = gameManager.getInventoryItems();
+        int selectedIndex = gameManager.getSelectedInventoryIndex();
+
+        for(int i = 0; i < items.length; i++){
+            String marker = i == selectedIndex ? "* " : "  ";
+            String type = "";
+
+            if(items[i] instanceof Plant){
+                type = " [seed]";
+            }
+            else if(items[i] instanceof Product){
+                Product product = (Product) items[i];
+                type = " [sell $" + product.getSellPrice() + "]";
+            }
+
+            inventoryModel.addElement(marker + (i + 1) + ". " + items[i].getName() + type);
+        }
+
+        if(selectedIndex >= 0 && selectedIndex < inventoryModel.size()){
+            inventoryList.setSelectedIndex(selectedIndex);
+        }
+    }
+
+    private void selectInventoryItemFromPanel(){
+        int index = inventoryList.getSelectedIndex();
+        if(index < 0){
+            gameManager.setMessage("Choose an inventory item first.");
+            draw();
+            return;
+        }
+
+        try {
+            gameManager.selectInventoryItem(index);
+        } catch(GameActionException exception){
+            gameManager.setMessage(exception.getMessage());
+        }
+
+        draw();
+    }
+
     private void handleTileClick(int x, int y){
         if(actionMode == ActionMode.NONE){
             return;

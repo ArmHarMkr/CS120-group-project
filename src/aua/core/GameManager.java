@@ -58,6 +58,10 @@ public class GameManager {
         return player.getInventoryItems();
     }
 
+    public int getSelectedInventoryIndex(){
+        return player.getSelectedInventoryIndex();
+    }
+
 
     public static GameManager load() throws IOException, MalformedStringException, NumberFormatException {
         GameManager reconstructedGameManager = new GameManager();
