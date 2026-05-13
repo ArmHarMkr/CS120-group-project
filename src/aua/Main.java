@@ -6,7 +6,6 @@ import aua.ui.GrandmasGardenUI;
 
 public class Main {
     public static void main(String[] args) {
-        args = new String[] {"-ui"};
         String mode = args.length > 0 ? args[0] : "-ui" ;
 
         try {

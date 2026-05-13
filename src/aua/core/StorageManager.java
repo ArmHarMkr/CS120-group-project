@@ -6,7 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class StorageManager {
-    static final String defaultPath = "data.txt";
+//    https://stackoverflow.com/a/4362858
+    static final String defaultPath = System.getProperty("user.dir")+"/src/aua/data.txt";
 
     /**
      *
