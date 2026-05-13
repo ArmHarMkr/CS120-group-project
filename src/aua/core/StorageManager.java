@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class StorageManager {
 //    https://stackoverflow.com/a/4362858
-    static final String defaultPath = System.getProperty("user.dir")+"/src/aua/data.txt";
+    static final String defaultPath = System.getProperty("user.dir")+"/aua/data.txt";
 
     /**
      *
